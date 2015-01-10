@@ -1,0 +1,328 @@
+# ==
+# Semantic CRUD
+# ==
+
+	1) Semantic CRUD: Perform (Create Read, Update, Delete) operations on the semantic properties of kinds of things,
+	and author free-form pages that reference the values of these semantic properties.
+	
+o Notes: Use rails to generate the bulk of the CRUD performing code.
+	If we install simple_form first, the generated forms are simpler.
+
+# Simple Form
+# ==
+
+o Notes: Simple Form is a gem that permits developers to make cleaner, DRYer web forms in Rails.
+	It has a generator that is aware of Twitter Bootstrap and will create forms in Twitter style.
+
+	http://railscasts.com/episodes/234-simple-form?autoplay=true
+	http://railscasts.com/episodes/234-simple-form-revised?autoplay=true
+	https://github.com/plataformatec/simple_form
+
+  Inside your views, use the 'simple_form_for' with one of the Bootstrap form
+  classes, '.form-horizontal', '.form-inline', '.form-search' or
+  '.form-vertical', as the following:
+
+    = simple_form_for(@user, :html => {:class => 'form-horizontal' }) do |form|
+
+o add gem to Gemfile
+echo 'gem "simple_form", "~> 2.0.2"' >> Gemfile
+
+o install simple_form with bootstrap option (update our forms for us)
+bundle
+rails generate simple_form:install --bootstrap
+
+# ==
+# Friendly perma-linked URLs
+# ==
+
+	3) Friendly perma-linked URLs: Permanent, logical, human readable links to all pages of kinds of things.
+
+# Friendly ID
+# ==
+
+o Notes: Friendly ID makes permanent, logical, human readable links.	
+	http://railscasts.com/episodes/314-pretty-urls-with-friendlyid?autoplay=true
+	https://github.com/norman/friendly_id
+	http://rubydoc.info/github/norman/friendly_id/master/frames
+
+o Friendly ID provides feature #4: perma-linked URLs to all kinds and things.
+	Instead of URLs like this:
+	http://myhost.com/kinds/1/things/2
+	We'll have perma-linked URLs like:
+	http://myhost.com/kinds/people/things/bill-van-etten
+	
+o add gem to Gemfile
+echo 'gem "friendly_id", "~> 4.0.8"' >> Gemfile
+
+o add friendly_id slug to pages
+bundle
+rails generate friendly_id
+rake db:migrate
+
+# Scaffolds
+# ==
+
+o generate abstract class AbstractPage model
+rails generate model abstract_page author:references parent_control:references type:string name:string state:string --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o generate Group scaffold
+rails generate scaffold group name:string --parent=abstract_page --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o generate Topic scaffold
+rails generate scaffold topic name:string --parent=abstract_page --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o generate Page scaffold (belongs to Topic)
+rails generate scaffold page topic:references name:string --parent=abstract_page --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o generate Thing scaffold (belongs to Topic)
+rails generate scaffold thing topic:references name:string color:string position:integer x:integer y:integer --parent=abstract_page --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o generate Kind scaffold (belongs to Thing)
+rails generate scaffold kind thing:references name:string values:text --parent=abstract_page --no-test-framework --no-assets --no-helper --no-stylesheets
+
+# Models
+# ==
+
+o generate Property models (belongs to Thing)
+rails generate model property thing:references parent_control:references name:string type:string position:integer many:boolean required:boolean matches:string restricted:string minimum:decimal maximum:decimal view:text --no-test-framework
+rails generate model string_property thing:references name:string position:integer many:boolean required:boolean matches:string restricted:string view:text --parent=property --no-test-framework
+rails generate model boolean_property thing:references name:string position:integer view:text --parent=property --no-test-framework
+rails generate model number_property thing:references name:string position:integer many:boolean required:boolean matches:string restricted:string minimum:decimal maximum:decimal view:text --parent=property --no-test-framework
+rails generate model date_time_property thing:references name:string position:integer many:boolean required:boolean matches:string restricted:string view:text --parent=property --no-test-framework
+rails generate model file_property thing:references name:string position:integer required:boolean view:text --parent=property --no-test-framework
+rails generate model expression_property thing:references name:string position:integer many:boolean required:boolean matches:string restricted:string view:text --parent=property --no-test-framework
+rails generate model thing_property thing:references name:string position:integer view:text --parent=property --no-test-framework
+
+o generate Summary models (belongs to Thing)
+rails generate model summary thing:references parent_control:references name:string type:string position:integer view:text --no-test-framework
+rails generate model expression_summary thing:references name:string position:integer view:text --parent=summary --no-test-framework
+rails generate model data_table_summary thing:references name:string position:integer view:text --parent=summary --no-test-framework
+rails generate model pie_plot_summary thing:references name:string position:integer view:text --parent=summary --no-test-framework
+rails generate model line_plot_summary thing:references name:string position:integer view:text --parent=summary --no-test-framework
+rails generate model bar_plot_summary thing:references name:string position:integer view:text --parent=summary --no-test-framework
+
+o generate Membership model
+rails generate model membership group:references user:references --no-test-framework
+
+o generate Subscription model
+rails generate model subscription topic:references user:references --no-test-framework
+
+# Migrations
+# ==
+
+o extend User
+rails generate migration add_slug_to_users is_admin:boolean authentication_token:string slug:string:index
+
+o add friendly_id to AbstractPage
+rails generate migration add_slug_to_abstract_pages slug:string:index
+
+o add Page attributes to AbstractPage
+rails generate migration add_page_to_abstract_page topic_id:integer
+
+o add Thing attributes to AbstractPage
+rails generate migration add_thing_to_abstract_page color:string position:integer x:integer y:integer
+
+o add Kind attributes to AbstractPage
+rails generate migration add_kind_to_abstract_page thing_id:integer values:text
+
+o add friendly_id to Property
+rails generate migration add_slug_to_properties slug:string:index
+
+o add friendly_id to Summary
+rails generate migration add_slug_to_summaries slug:string:index
+
+o update add_name
+    add_column :users, :name, :string, :null => :false
+
+o update add_slug
+    add_column :users, :is_admin, :boolean, :default => false
+
+o update create_abstract_pages not null and defaults
+      t.references :author, :null => :false
+      t.string :type, :null => :false
+      t.string :name, :null => :false, :unique => true
+      t.string :state, :default => "new"
+
+o update add_page not null and defaults
+add_column :abstract_pages, :topic_id, :integer, :null => :false
+
+o update add_thing not null and defaults
+add_column :abstract_pages, :color, :string, :default => "#CCC"
+add_column :abstract_pages, :position, :integer, :default => 0
+add_column :abstract_pages, :x, :integer, :default => 0
+add_column :abstract_pages, :y, :integer, :default => 0
+
+o update add_kind
+add_column :abstract_pages, :thing_id, :integer, :null => :false
+
+o update create_properties not null and defaults
+t.references :thing, :null => :false
+t.string :name, :null => :false
+t.string :type, :null => :false, :default => "StringProperty"
+t.integer :position, :default => 0
+t.boolean :many, :default => false
+t.boolean :required, :default => false
+
+o update create_summaries not null and defaults
+t.references :thing, :null => :false
+t.string :name, :null => :false
+t.string :type, :null => :false, :default => "DataTableSummary"
+t.integer :position, :default => 0
+
+o update memberships
+      t.references :group, :null => :false
+      t.references :user, :null => :false
+
+      t.timestamps
+    end
+    add_index :memberships, [:group_id, :user_id]
+
+o update subscriptions
+      t.references :topic, :null => :false
+      t.references :user, :null => :false
+
+      t.timestamps
+    end
+    add_index :subscriptions, [:topic_id, :user_id]
+
+# Validations and Associations
+# ==
+
+o model user
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :is_admin
+  before_save :ensure_authentication_token
+  has_many :topics
+  has_many :things
+  has_many :kinds
+  has_many :pages
+  has_many :memberships
+  has_many :groups, through: :memberships
+  has_many :subscriptions
+  has_many :topics, through: :subscriptions
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :email, :presence => true, :uniqueness => {:case_sensitive => false}
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
+
+o model group
+  attr_accessible :name, :user_ids
+  has_many :memberships
+  has_many :users, through: :memberships
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+  validates :users, :presence => true
+
+o model abstract_page
+  belongs_to :author, :class_name => 'User'
+  attr_accessible :name, :type
+  default_scope :order => 'name ASC'
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
+
+o model topic
+  attr_accessible :name
+  has_many :things, :dependent => :destroy
+  has_many :pages, :dependent => :destroy
+  has_many :subscriptions
+  has_many :users, through: :subscriptions
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+
+o mode page
+  belongs_to :topic
+  attr_accessible :name
+  # audited
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+
+o model thing
+  belongs_to :topic
+  attr_accessible :name, :color, :position, :x, :y, :properties_attributes, :summaries_attributes
+  has_many :kinds, :order => :name, :dependent => :destroy
+  has_many :properties, :order => :position, :dependent => :destroy
+  has_many :summaries, :order => :position, :dependent => :destroy
+  accepts_nested_attributes_for :properties, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
+  accepts_nested_attributes_for :summaries, :reject_if => lambda { |a| a[:name].blank? }, :allow_destroy => true
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
+
+o model kind
+  belongs_to :thing
+  attr_accessible :name, :values
+  store :values
+  validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
+
+o model property
+  attr_accessible :name, :type, :position, :many, :required, :restricted, :matches, :maximum, :minimum
+  attr_accessible :form, :input, :label, :hint, :placeholder, :tooltip, :default, :expression, :relationship, :string_input, :number_input, :date_time_input
+  store :form, accessors: [:input, :label, :hint, :placeholder, :tooltip, :default, :expression, :file_types, :relationship, :string_input, :number_input, :date_time_input]
+  attr_accessible :view, :hyperlink, :units, :precision, :boolean_format, :date_time_format, :expression_format, :css_class
+  store :view, accessors: [:hyperlink, :units, :precision, :boolean_format, :date_time_format, :expression_format, :css_class]
+  belongs_to :thing
+  default_scope :order => 'position ASC'
+  validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
+
+o model summary
+  belongs_to :thing
+  attr_accessible :name, :type, :position
+  attr_accessible :view, :title, :properties, :expression, :expression_format, :categories, :series, :y_axis_title
+  store :view, accessors: [:title, :properties, :expression, :expression_format, :categories, :series, :y_axis_title]
+  default_scope :order => 'position ASC'
+  validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
+
+o modify db/seeds
+user = User.create! :email => 'williamvanetten@gmail.com', :password => 'secret', :password_confirmation => 'secret', :name => 'Bill Van Etten', :is_admin => true
+
+# Routes
+# ==
+
+o modify routes for nested resources and default route
+  authenticated :user do
+    root :to => 'home#index'
+  end
+  root :to => "home#index"
+  devise_for :users
+  resources :users, :only => [:show, :index]
+  resources :groups
+  resources :topics
+  scope :path => ":topic_id", :as => "topic" do
+    resources :pages
+    resources :things do
+      collection { post :position }
+      resources :kinds
+    end
+  end
+
+rake db:migrate
+rake db:test:prepare
+rake db:seed
+
+# Test and commit
+# ==
+
+rspec
+16 examples, 0 failures
+
+cucumber
+12 scenarios (12 passed)
+46 steps (46 passed)
+
+git add .
+git commit -am "friendly_id, simple_form, CRUD"
+
+# Groups tests, Test and commit
+# ==
+
+o add features/groups and group_steps.rb
+
+rspec
+16 examples, 0 failures
+
+cucumber
+13 scenarios (13 passed)
+52 steps (52 passed)
+
+git add .
+git commit -am "initial group specs"

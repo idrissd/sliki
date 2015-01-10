@@ -1,0 +1,154 @@
+# ==
+# Multi-tenant
+# ==
+
+13) Multi-tenant: Each topic provides a separate namespace and is served within its own subdomain, permitting multi-tenant uses.
+
+o Notes
+	http://railscasts.com/episodes/123-subdomains-revised
+
+	o Pages and Things belong to a Topic and are accessed through nested routes.
+	  topic_page 				GET    /:topic_id/pages/:id(.:format)                       pages#show
+	  topic_thing_kind 	GET    /:topic_id/things/:thing_id/kinds/:id(.:format)      kinds#show
+
+	o Change to topic_id.example.com/pages and topic_id.example.com/things
+	
+	o Subdomains requires some form of DNS resolution of subdomains
+
+# lvh, Methods for DNS resolution of subdomains
+# ==
+
+o Can use lvh.me, but this won't work for external clients
+	http://subdomain.lvh.me:3000
+
+# pow, Methods for DNS resolution of subdomains
+# ==
+
+o pow gives both subdomains and access to external clients, but only on same network
+
+o Notes
+	http://pow.cx/
+
+o install pow
+curl get.pow.cx | sh
+# To uninstall Pow, `curl get.pow.cx/uninstall.sh | sh`
+cd ~/.pow
+ln -s /Users/vanetten/Desktop/sliki
+cd ~/Desktop/sliki
+echo "rvm ruby-1.9.3-p194@sliki" > .rvmrc
+cat >> .powrc
+if [ -f "$rvm_path/scripts/rvm" ] && [ -f ".rvmrc" ]; then
+  source "$rvm_path/scripts/rvm"
+  source ".rvmrc"
+fi
+[cntrl D]
+
+o Now rails server is automatically loaded whenever we access it at
+	http://sliki.dev
+
+o External clients on same network can go here:
+ipconfig getifaddr en0
+10.0.1.15
+http://sliki.10.0.1.15.xip.io/
+
+o restart with:
+touch ~/.pow/restart.txt
+
+# powify, makes pow even simpler
+# ==
+
+o Notes
+	https://github.com/sethvargo/powify
+
+o install powify
+echo 'gem "powify", "~> 0.8.5"' >> Gemfile
+bundle
+powify
+
+o restart with:
+powify restart
+
+# showoff-io, Methods for DNS resolution of subdomains
+# ==
+
+o showoff-io gives both subdomains and access to external clients on external network
+
+o Notes
+	https://showoff.io
+
+o install showoff-io, didn't actually do this, tested but removed
+echo 'gem "showoff-io", "~> 0.3.1"' >> Gemfile
+bundle
+
+o start showoff-io
+show dev.
+
+o Access from anywhere
+https://sliki.qvt8.showoff.io/
+
+o revise application_controller
+private
+...
+def load_topic
+  # @topic = Topic.find(params[:topic_id])
+  @topic = Topic.find_by_subdomain!(request.subdomain)
+end
+
+o created initializer/subdomain
+
+o revise routes
+class Subdomain
+  def self.matches?(request)
+    request.subdomain.present? && Topic.exists?(request.subdomain)
+  end
+end
+
+Sliki::Application.routes.draw do
+
+  devise_for :users, :controllers => { :sessions => "sessions" }
+  resources :users, :only => [:show, :index]
+  resources :versions, :only => [:show, :update]
+  resources :groups
+  resources :topics
+  constraints(Subdomain) do
+    resources :pages
+    resources :things do
+      resources :kinds
+    end
+    match '/', to: 'topics#show'
+  end
+  root :to => "topics#index"
+
+o revised topics controller show method
+
+# @topic = Topic.find(params[:id])
+@topic = Topic.find(request.subdomain)
+
+o revised environments/development.rb for later, used for connecting external clients through pow
+# If you have a longer top level domain such as "example.co.uk"
+# config.action_dispatch.tld_length = 2
+
+o revised initializers/session_store.rb, so all domains use the same cookie
+Sliki::Application.config.session_store :cookie_store, key: '_sliki_session', :domain => 'lvh.me'
+
+o commented out spec/controllers/home_controller_spec.rb
+
+o modified spec/requests/rest_apis_spec.rb for subdomains
+
+# Test and commit
+# ==
+
+rspec
+21 examples, 0 failures
+
+cucumber
+26 scenarios (26 passed)
+149 steps (149 passed)
+
+yard doc
+41.41% documented
+
+git add .
+git commit -am "multitenant"
+
+

@@ -1,0 +1,116 @@
+# ==
+# Provision Development Environment
+# ==
+
+o Notes
+	http://railsapps.github.com/installing-rails.html
+	http://moncefbelyamani.com/how-to-install-xcode-homebrew-git-rvm-ruby-on-mac/
+
+	Developing a Rails app involves installing, using, experimenting with various
+	gems and sometimes versions of ruby. To avoid clobbering the system ruby and gems it's
+	nice to keep "your" ruby and "your" gems for "this" project separate from everything else.
+	Sand-boxed combinations of ruby and various versioned gems are most easily managed with rvm.
+	Installing rvm requires git.
+	Git is most easily installed on Mac OS X with homebrew which requires a gcc compiler.
+
+	Therefore for development, install like this: gcc->homebrew-->git-->rvm-->ruby-->rails
+
+# GCC
+# ==
+
+o Notes
+	https://developer.apple.com/technologies/tools/
+	https://github.com/kennethreitz/osx-gcc-installer
+
+o install gcc with Xcode or minimal osx-gcc-installer, or skip if you have it
+
+# Homebrew
+# ==
+
+o Notes
+	http://mxcl.github.com/homebrew/
+
+o install homebrew, or skip if you have it
+/usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
+
+# Git
+# ==
+
+o Notes
+	http://git-scm.com/
+	
+o install git with homebrew, or skip if you have it
+brew install git
+
+# RVM
+# ==
+
+o Notes
+	https://rvm.beginrescueend.com/
+
+o install rvm, or check version and update if you have < 1.10.1, or skip if you have it
+curl -L get.rvm.io | bash -s stable
+
+o check for requirements
+source ~/.rvm/scripts/rvm
+rvm requirements
+
+o configure rvm
+echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"' >> ~/.profile
+
+o update rvm if < 1.10.1
+rvm -v
+rvm 1.10.1 by Wayne E. Seguin <wayneeseguin@gmail.com>, Michal Papis <mpapis@gmail.com> [https://rvm.beginrescueend.com/]
+rvm get latest
+rvm reload
+
+# Ruby
+# ==
+
+o Notes
+	http://www.ruby-lang.org/
+	
+rvm install ruby-2.1.2
+
+# Gem
+# ==
+
+o Notes
+	http://rubygems.org/
+	
+o update gem (installed with ruby) if < 2.2.2, or skip it if you have it
+gem update --system
+gem -v
+2.2.2
+
+o configure gem
+echo "install: --no-rdoc --no-ri" >> ~/.gemrc
+echo "update: --no-rdoc --no-ri" >> ~/.gemrc
+
+# Rake
+# ==
+
+o update rake (installed with ruby) if < 10.4.2, or skip it if you have it
+gem update rake
+rake --version
+rake, version 10.4.2
+
+# ==
+# Sandbox
+# ==
+
+o Use rvm to create our sandboxed ruby and gems.
+
+# RVM
+# ==
+
+o use ruby
+rvm use ruby-2.1.2
+
+# Gemset, bundler, and rails
+# ==
+
+o create sliki gemset
+rvm gemset create sliki
+rvm gemset use sliki
+

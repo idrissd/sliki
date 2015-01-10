@@ -1,0 +1,82 @@
+# ==
+# Responsive UI
+# ==
+
+	2) Responsive UI: A beautiful, native-like, HTML5 UI that scales to look best on any browser or mobile device.
+
+o Notes: Twitter Bootstrap includes javascript and CSS that enables a responsive UI.
+	It's fairly simple to add, but it uses LESS instead of SCSS or SASS.
+	I like SASS better so I'll take the couple of extra steps to use a SASS version of bootstrap.
+
+# Twitter Bootstrap
+# ==
+
+o Notes 
+	http://twitter.github.com/bootstrap/
+	http://railscasts.com/episodes/328-twitter-bootstrap-basics?autoplay=true
+	http://railscasts.com/episodes/329-more-on-twitter-bootstrap?autoplay=true
+	http://rubygems.org/gems/twitter-bootstrap-rails
+	http://rubysource.com/twitter-bootstrap-less-and-sass-understanding-your-options-for-rails-3-1/
+	http://railsapps.github.com/rails-default-application-layout.html
+
+o Beautiful, native-like, responsive HTML5 UI that scales to look best on any browser or mobile device.
+	Twitter Bootstrap uses less, and cool kids prefer SASS. The twitter-bootstrap-rails gem installs all
+	of the Javascript and CSS within the Rails asset pipeline, as well as providing generators for updating the
+	scaffolding for use with Twitter Bootstrap. With a few tweaks we can use twitter-bootstrap-rails to
+	install the Javascript and CSS, use it to update the scaffolding, and modify it a bit to use SASS.
+	
+o need to install twitter-bootstrap first so we can use the generators, then switch from less to sass
+
+o add assets group within Gemfile
+gem 'twitter-bootstrap-rails', '~> 2.1.3'
+bundle
+
+o install twitter bootstrap
+rails generate bootstrap:install
+rails generate bootstrap:layout application fluid
+
+# Bootstrap SASS
+# ==
+
+o switch from twitter-bootstrap to bootstrap-sass so we can use sass instead of less
+
+o remove twitter-bootstrap asset from Gemfile
+gem 'twitter-bootstrap-rails', '~> 2.1.3'
+
+o add bootstrap-sass and font-awesome-sass-rails assets to Gemfile
+gem 'bootstrap-sass', '~> 2.1.0.0'
+gem 'font-awesome-sass-rails', '~> 2.0.0.0'
+
+o install bootstrap-sass
+bundle
+
+o rename bootstrap_and_overrides.css.less to .scss
+mv app/assets/stylesheets/bootstrap_and_overrides.css.less app/assets/stylesheets/bootstrap_and_overrides.css.scss
+
+o modify bootstrap_and_overrides.css.scss from less to sass code
+@import "bootstrap";
+body { padding-top: 60px; }
+@import "bootstrap-responsive";
+@import 'font-awesome';
+
+o update application.js to require bootstrap instead of twitter/bootstrap
+//= require bootstrap
+
+o rename bootstrap.js.coffee to bootstrap_additions.js.coffee
+mv app/assets/javascripts/bootstrap.js.coffee app/assets/javascripts/bootstrap_additions.js.coffee
+
+o rename app/assets/stylesheets/application.css to .scss
+mv app/assets/stylesheets/application.css app/assets/stylesheets/application.css.scss
+
+# Test and commit
+# ==
+
+rspec
+16 examples, 0 failures
+
+cucumber
+12 scenarios (12 passed)
+46 steps (46 passed)
+
+git add .
+git commit -m "twitter bootstrap"

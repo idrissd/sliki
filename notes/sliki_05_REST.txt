@@ -1,0 +1,278 @@
+# ==
+# REST-ful API
+# ==
+
+	5) REST-ful API: A REST-ful (Representational State Transfer) HTML, JSON, XML, CSV, XLS API (Application Programming Interface) to pages of kinds of things,
+	meaning one can perform CRUD operations through HTML, JSON, XML, CSV, and XLS files.
+
+o Notes: Rails apps have a REST-ful JSON and XML API out of the box, but they do not support nested attributes by default and
+	now that we have authentication in place, we must authenticate to perform REST-ful CRUD operations. We can add rabl to give us
+	a REST-ful builder for various formats and extend devise to authenticate with a token.
+
+# Controllers, Helpers, Locale
+# ==
+
+o simplify groups, pages, topics, things, kinds controllers using respond_to html, json, xml and respond_with
+	This isn't really necessary, but it makes the code DRYer.
+
+o add a global dt helper to applications_controller for wrapping translations for those missing a key
+
+o add shared methods to application_controller for loading parent records
+  helper_method :dt
+
+  def dt(key, options = {})
+    options.merge!(:default => t('app.missing')) unless options.key?(:default)
+    t(key, options)
+  end
+  
+private
+
+  def load_topic
+    @topic = Topic.find(params[:topic_id])
+  end
+
+  def load_thing
+    @thing = Thing.find(params[:thing_id])
+  end  
+
+o add a little Locale to config.locales/en.yml to handle translations of our create, update, and destroy messages
+en:
+  app:
+    name: Sliki
+    copyright: BioTeam 2012
+    missing: No Locale
+  notices:
+    create: "%{model} was successfully created."
+    update: "%{model} was successfully updated."
+    destroy: "%{model} was successfully destroyed."
+
+# RABL
+# ==
+
+o Notes: This is necessary for returning JSON, XML of nested attributes, also prettys up the responses
+	https://github.com/nesquena/rabl/
+	http://railscasts.com/episodes/322-rabl?autoplay=true
+
+o install the rabl gem
+echo 'gem "rabl", "~> 0.7.1"' >> Gemfile
+bundle
+
+o create config/initializers/rabl.rb
+
+o create index.json.rabl and show.json.rabl for users, groups, topics, pages, kinds, and things
+
+# Devise authentication by auth_token
+# ==
+
+o Notes: Tweak devise to support authentication tokens for REST-ful authentication
+	http://www.strukturedkaos.com/2011/09/19/soup-to-nuts-token-authentication-for-android-using-rails-3-devise/
+
+o create sessions_controller and modify it
+rails generate controller sessions --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o uncomment config/initializers/devise.rb
+config.token_authentication_key = :auth_token
+
+o revise routes
+devise_for :users, :controllers => { :sessions => "sessions" }
+
+o add test for authentication_token to user_spec
+  it "should generate an authentication token" do
+    user = User.create!(@attr)
+    user.authentication_token.should_not be_nil
+  end
+
+# json_spec
+# ==
+
+o Notes
+	json_spec makes it easier to test REST-ful JSON API
+	https://github.com/collectiveidea/json_spec
+	
+o add json_spec to Gemfile
+gem "json_spec", ">= 1.0.3", :group => :test
+bundle
+
+o modify features/support/env.rb
+require "json_spec/cucumber"
+
+o add to spec_helper
+  config.include(JsonSpec::Helpers)
+
+# Guard
+# ==
+
+o Notes
+	guard detects file systems changes and automatically runs all tests
+	http://railscasts.com/episodes/275-how-i-test?autoplay=true
+	http://railscasts.com/episodes/158-factories-not-fixtures
+	https://github.com/rspec/rspec-rails
+	http://cukes.info
+	https://github.com/cucumber/cucumber-rails
+	https://github.com/guard/guard
+	https://github.com/guard/guard-rspec
+	https://github.com/dnagir/guard-rails-assets
+	https://github.com/bmabey/email-spec/
+	http://railsapps.github.com/tutorial-rails-devise-rspec-cucumber.html
+
+o add guards to Gemfile
+gem "guard-rspec", ">= 1.2.1", :group => :test
+gem "guard-rails-assets", ">= 0.1.3", :group => :test
+gem "guard-cucumber", ">= 1.2.0", :group => :test
+gem "rb-fsevent", ">= 0.9.1", :group => :test
+bundle
+
+o initialize and start guard
+guard init
+guard
+
+# Rspec/Cucumber Textmate bundles
+# ==
+o Notes
+	https://github.com/rspec/rspec-tmbundle
+	https://github.com/bmabey/cucumber-tmbundle
+	
+mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+git clone git://github.com/rspec/rspec-tmbundle.git RSpec.tmbundle
+osascript -e 'tell app "TextMate" to reload bundles'
+
+cd ~/Library/Application\ Support/TextMate/Bundles
+rm -rf Cucumber.tmbundle 
+git clone git://github.com/cucumber/cucumber-tmbundle.git Cucumber.tmbundle
+osascript -e 'tell app "TextMate" to reload bundles'
+
+# REST request spec
+# ==
+
+o create factories/topics
+
+o generate request spec
+rails generate integration_test rest_api
+
+o modify rest_apis_spec
+
+# Test and commit
+# ==
+
+o with rspec
+rspec
+22 examples, 0 failures
+
+o with cucumber
+cucumber
+13 scenarios (13 passed)
+52 steps (52 passed)
+
+o with guard
+guard
+Running all features
+Disabling profiles...
+......................................................
+
+13 scenarios (13 passed)
+52 steps (52 passed)
+
+Running all specs
+......................
+
+Finished in 1.05 seconds
+22 examples, 0 failures
+
+git add .
+git commit -am "REST-ful API"
+
+# Testing REST-ful interface using curl
+# ==
+
+# REST-ful CRUD operations with JSON or XML
+o Create 	= POST
+o Read		= GET
+o Update	= PUT
+o Delete	= DELETE
+
+o Create a session to get an auth_token by "POST"-ing login credentials to "users/sign_in"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X POST http://localhost:3000/users/sign_in \
+-d '{"user": {"email":"williamvanetten@gmail.com","password":"secret"}}'
+
+RESPONSE:
+{"session":{"error":"Success","auth_token":"SqdLxfHU6M2zzx1iWWf6"}}
+
+o Create a topic by "POST"-ing to "topics"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X POST http://localhost:3000/topics?auth_token=SqdLxfHU6M2zzx1iWWf6 \
+-d '{"name":"MyTopic"}'
+
+RESPONSE:
+{"author_id":1,"color":"#CCC","created_at":"2012-09-27T15:47:59Z","id":3,"name":"MyTopic","position":0,"slug":"mytopic","state":null,"thing_id":null,"topic_id":null,"updated_at":"2012-09-27T15:47:59Z","values":null,"x":0,"y":0}
+
+o Read topics by "GET"-ting "topics"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X GET http://localhost:3000/topics?auth_token=SqdLxfHU6M2zzx1iWWf6
+
+RESPONSE:
+[{"id":3,"friendly_id":"mytopic","name":"MyTopic","author":{"created_at":"2012-09-25T11:59:40Z","email":"williamvanetten@gmail.com","id":1,"is_admin":true,"name":"Bill Van Etten","slug":"bill-van-etten","updated_at":"2012-09-27T15:47:59Z"},"permalink":"http://localhost:3000/topics/mytopic"}]
+
+o Read a topic by "GET"-ting "topics/<topic>"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X GET http://localhost:3000/topics/mytopic?auth_token=SqdLxfHU6M2zzx1iWWf6
+
+RESPONSE:
+{"id":3,"friendly_id":"mytopic","name":"MyTopic","author":{"created_at":"2012-09-25T11:59:40Z","email":"williamvanetten@gmail.com","id":1,"is_admin":true,"name":"Bill Van Etten","slug":"bill-van-etten","updated_at":"2012-09-27T15:47:59Z"},"permalink":"http://localhost:3000/topics/mytopic"}
+
+o Update a topic by "PUT"-ting to "topics/<topic>"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X PUT http://localhost:3000/topics/mytopic?auth_token=SqdLxfHU6M2zzx1iWWf6 \
+-d '{"id":2,"name":"YourTopic"}'
+
+o Read a topic again by "GET"-ting "topics/<topic>"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X GET http://localhost:3000/topics/mytopic?auth_token=SqdLxfHU6M2zzx1iWWf6
+
+RESPONSE:
+{"id":3,"friendly_id":"yourtopic","name":"YourTopic","author":{"created_at":"2012-09-25T11:59:40Z","email":"williamvanetten@gmail.com","id":1,"is_admin":true,"name":"Bill Van Etten","slug":"bill-van-etten","updated_at":"2012-09-27T15:47:59Z"}
+
+o Delete a topic by "DELETE"-ing "topics/<topic>"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X DELETE http://localhost:3000/topics/yourtopic?auth_token=SqdLxfHU6M2zzx1iWWf6
+
+# Read topics again by "GET"-ting "topics"
+
+REQUEST:
+curl \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-X GET http://localhost:3000/topics?auth_token=SqdLxfHU6M2zzx1iWWf6
+
+RESPONSE:
+[]
+

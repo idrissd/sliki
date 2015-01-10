@@ -1,0 +1,146 @@
+# View
+# ==
+
+14) Interactive Tables and Plots: Easily create beautiful interactive reports of properties of kinds of things
+as mathematical expressions, or interactive tables and plots.
+
+15) Graphical Relationship Browser: Graphically view and browse the relationships between kinds of things.
+
+# jQuery Datatables
+# ==
+
+o Notes: http://railscasts.com/episodes/340-datatables?autoplay=true
+
+o add jquery-datatables-rails and jquery-ui-rails to asset pipeline
+gem "jquery-datatables-rails", "~> 1.10.0"
+gem "jquery-ui-rails", "~> 1.1.1"
+
+# Highcharts
+# ==
+
+o Notes: http://railscasts.com/episodes/223-charts?autoplay=true
+http://www.highcharts.com
+https://github.com/PerfectlyNormal/highcharts-rails
+
+o add highcharts-rails to asset pipeline
+gem "highcharts-rails", "~> 2.2.1"
+
+# Raphael
+# ==
+
+o add raphael to asset pipeline
+gem 'raphael-rails', '~> 2.1.0'
+
+# Colorpicker
+# ==
+
+o NOTES
+	http://rubygems.org/gems/bootstrap-colorpicker-rails
+
+o bootstrap-colorpicker-rails is a gem that loads colorpicker js and css into the asset pipeline
+	to gives us a graphical widget for selecting colors
+
+o add colorpicker gem to asset group
+gem 'bootstrap-colorpicker-rails', '~> 0.1'
+
+# Select2
+# ==
+
+o Notes
+	http://ivaynberg.github.com/select2/
+	
+o add select2-rails to asset pipeline
+
+gem "select2-rails", "~> 3.1.1"
+
+# iOS touch events
+# ==
+
+o Notes
+	http://touchpunch.furf.com/
+
+o Add jquery.ui.touch-punch.min.js to asset pipeline
+
+wget --directory-prefix=app/assets/javascripts https://raw.github.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js
+
+# Nested Attributes
+# ==
+
+o Notes
+	https://github.com/ryanb/nested_form
+	http://railscasts.com/episodes/205-unobtrusive-javascript
+
+o add nested_form to asset pipeline
+gem "nested_form", "~> 0.2.2"
+
+# Best in place
+# ==
+
+o Notes
+	https://github.com/alank64/best_in_place
+
+o add nested_form to asset pipeline
+gem "best_in_place", "~> 1.1.2", git: "git://github.com/alank64/best_in_place.git"
+
+# Math Engine
+# ==
+
+o Notes
+	https://github.com/michaelbaldry/math_engine
+
+o install best_in_place
+echo 'gem "lexr", ">= 0.3.0", git: "http://github.com/michaelbaldry/lexr.git"' >> Gemfile
+echo 'gem "math_engine", git: "git://github.com/michaelbaldry/math_engine.git"' >> Gemfile
+
+
+o update application.js
+//= require jquery
+//= require jquery_ujs
+//= require jquery.ui.all
+//= require select2
+//= require jquery.purr
+//= require best_in_place
+//= require bootstrap
+//= require bootstrap-colorpicker
+//= require jquery_nested_form
+//= require dataTables/jquery.dataTables
+//= require highcharts
+//= require raphael
+//= require_tree .
+
+o create datatasbles.js.coffee, erd.js, sliki.js.coffee
+
+o install
+bundle # COMMAND
+
+o update application.css
+*= require_self
+*= require bootstrap-colorpicker
+*= require jquery.ui.core
+*= require jquery.ui.theme
+*= require dataTables/src/demo_table_jui
+*= require dataTables/jquery.dataTables.bootstrap
+*= require select2
+*= require_tree .
+
+o create datatasbles.sass, sliki.sass
+
+o add images delete, logo, show.png
+
+o updated many views to accommodate subdomain support
+
+# Test and commit
+# ==
+
+rspec
+21 examples, 0 failures
+
+cucumber
+27 scenarios (27 passed)
+189 steps (189 passed)
+
+yard doc
+36.51% documented
+
+git add .
+git commit -am "updated views"

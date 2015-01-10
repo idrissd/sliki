@@ -1,0 +1,195 @@
+# ==
+# Rails
+# ==
+
+	21) Developed in Ruby on Rails for rock solid, bug free reliability. Very little, but beautiful DRY (Don't Repeat Yourself) code
+	written in ruby, HTML (erb or haml), javascript (coffee script), and CSS (SCSS).
+
+	14) Flexible Deployment Stack: Use the included web server (WEBrick) and database (sqlite3) or easily mix/match use of various external
+	web servers (apache, mod_rails, Heroku) and databases (mysql, postgres, mongodb).
+
+	17) Development, Test, Production: Built-in support for simultaneous development, test, and production environments.
+	
+	18) Federate-able: Easily federate resources between multiple instances of sliki.
+
+# Create application
+# ==
+
+o use our sandbox
+	SEE: notes/sliki_01_sandbox.txt
+
+	mkdir sliki
+	cd sliki
+	rvm use ruby-2.1.2
+	rvm gemset use sliki
+	gem install rails -v "=4.1.8"
+	gem install rails_apps_composer
+	gem install rvm
+	rails_apps_composer new . -r core
+	rails_apps_composer template template.rb
+
+# ==
+# Testable
+# ==
+
+	19) Testable: RSpec for TDD and Unit/Functional tests, Cucumber for BDD and Integration tests (including the web UI, CSS, and js).
+
+# Devise, Rspec, Cucumber, Capybara, FactoryGirl
+# ==
+
+o notes
+	http://railsapps.github.com/tutorial-rails-devise-rspec-cucumber.html
+
+
+# Rspec Guard
+# ==
+
+rspec
+guard
+
+# Configure Email
+# ==
+
+o config/environments/development.rb
+  # config.action_mailer.raise_delivery_errors = false
+
+  # ActionMailer Config
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method = :smtp
+
+  # change to false to prevent email from being sent during development
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
+
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "example.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: ENV["GMAIL_USERNAME"],
+    password: ENV["GMAIL_PASSWORD"]
+  }
+
+o config/environments/production.rb
+  # ActionMailer Config
+  config.action_mailer.default_url_options = { :host => 'bvairbook.local' }
+
+  # Setup for production - deliveries, no errors raised
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default :charset => "utf-8"
+
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "example.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: ENV["GMAIL_USERNAME"],
+    password: ENV["GMAIL_PASSWORD"]
+  }
+
+o config/environments/test.rb
+  # ActionMailer Config
+  config.action_mailer.default_url_options = { :host => 'bvairbook.local' }
+
+o set environment for email
+export GMAIL_USERNAME="myname@gmail.com"
+export GMAIL_PASSWORD="secret*"
+
+	
+# ==
+# Flexible Authentication, Part 1 of 2
+# ==
+
+	4) Flexible Authentication: Local authentication that's easily switched to remote sources (LDAP, AD, Kerberos, Facebook, Twitter).
+
+# Devise
+# ==
+
+o Notes
+	https://github.com/plataformatec/devise
+	http://railscasts.com/episodes/209-devise-revised?autoplay=true
+
+o install devise, answering no to overwrites
+rails generate devise:install
+rails generate devise User
+
+o modify initializers/devise.rb
+  config.mailer_sender = "williamvanetten@gmail.gom"
+  config.sign_out_via = Rails.env.test? ? :get : :delete
+
+o add a name for users
+rails generate migration AddNameToUsers name:string
+
+o modify config/application.rb
+config.filter_parameters += [:password, :password_confirmation]
+
+o update database
+bundle exec rake db:migrate
+bundle exec rake db:test:prepare
+
+o modify app/models/user.rb
+validates_presence_of :name
+validates_uniqueness_of :name, :email, :case_sensitive => false
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me
+
+o generate devise views
+rails generate devise:views
+
+o add name to devise edit and new views
+  <div><%= f.label :name %><br />
+  <%= f.text_field :name %></div>
+
+o generate home controller
+rails generate controller home index --no-controller-specs
+
+o modify home controller and views/home/index
+
+o create db/seeds
+rake db:seed
+
+o generate user controller
+rails generate controller users index show --no-controller-specs
+
+o modify users controller
+
+o modify routes
+  authenticated :user do
+    root :to => 'home#index'
+  end
+  root :to => "home#index"
+  devise_for :users
+  resources :users, :only => [:show, :index]
+
+o modify users show and index
+
+o create application, messages, navigation layouts
+
+# Test
+# ==
+
+rspec
+
+16 examples, 0 failures
+
+cucumber
+
+12 scenarios (12 passed)
+46 steps (46 passed)
+
+# Remove unwanted
+# ==
+
+rm app/assets/javascripts/home.js.coffee
+rm app/assets/javascripts/users.js.coffee
+rm app/assets/stylesheets/home.css.scss
+rm app/assets/stylesheets/users.css.scss
+rm app/helpers/home_helper.rb
+rm app/helpers/users_helper.rb
+
+git add .
+git commit -m "add testing environment"

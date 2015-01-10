@@ -1,0 +1,72 @@
+# ==
+# Background Tasks
+# ==
+
+11) Background Tasks: Schedule the execution of recurring tasks for background execution.
+
+o Notes
+	http://railscasts.com/episodes/366-sidekiq?view=asciicast
+	http://mperham.github.com/sidekiq/
+
+o install sidekiq
+echo 'gem "sidekiq", "~> 2.3.3"' >> Gemfile
+echo 'gem "sinatra", "~> 1.3.3", require: false' >> Gemfile
+echo 'gem "slim", "~> 1.3.2"' >> Gemfile
+bundle
+
+o update routes
+require 'sidekiq/web'
+...
+  mount Sidekiq::Web, at: '/sidekiq'
+
+o install redi and launch
+brew install redis
+redis-server /usr/local/etc/redis.conf
+
+If this is your first install, automatically load on login with:
+    mkdir -p ~/Library/LaunchAgents
+    cp /usr/local/Cellar/redis/2.4.16/homebrew.mxcl.redis.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+
+If this is an upgrade and you already have the homebrew.mxcl.redis.plist loaded:
+    launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+    cp /usr/local/Cellar/redis/2.4.16/homebrew.mxcl.redis.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+
+  To start redis manually:
+    redis-server /usr/local/etc/redis.conf
+
+  To access the server:
+    redis-cli
+==> Summary
+
+o start sidekiq server
+bundle exec sidekiq
+
+rails c
+topic = Topic.create! :name => "My Topic"
+thing = topic.things.build(:name => "My Thing")
+thing.save
+thing.transitions.build(:from_state => "new", :to_state => "performed", :on_event => "perform")
+thing.save
+kind = thing.kinds.build(:name => "My Kind")
+kind.state
+kind.machine.state
+kind.machine.perform
+kind.state
+
+# Test and commit
+# ==
+
+rspec
+21 examples, 0 failures
+
+cucumber
+26 scenarios (26 passed)
+175 steps (175 passed)
+
+yard doc
+40.00% documented
+
+git add .
+git commit -am "workflow"

@@ -1,0 +1,81 @@
+# ==
+# Flexible Authentication, Part 2 of 2
+# ==
+
+	4) Flexible Authentication: Local authentication that's easily switched to remote sources (LDAP, AD, Kerberos, Facebook, Twitter).
+
+o Notes
+	https://github.com/plataformatec/devise
+	http://railscasts.com/episodes/209-devise-revised?autoplay=true
+
+Database Authenticatable: encrypts and stores a password in the database to validate the authenticity of a user while signing in. The authentication can be done both through POST requests or HTTP Basic Authentication.
+Token Authenticatable: signs in a user based on an authentication token (also known as "single access token"). The token can be given both through query string or HTTP Basic Authentication.
+Omniauthable: adds Omniauth (https://github.com/intridea/omniauth) support;
+Confirmable: sends emails with confirmation instructions and verifies whether an account is already confirmed during sign in.
+Recoverable: resets the user password and sends reset instructions.
+Registerable: handles signing up users through a registration process, also allowing them to edit and destroy their account.
+Rememberable: manages generating and clearing a token for remembering the user from a saved cookie.
+Trackable: tracks sign in count, timestamps and IP address.
+Timeoutable: expires sessions that have no activity in a specified period of time.
+Validatable: provides validations of email and password. It's optional and can be customized, so you're able to define your own validations.
+Lockable: locks an account after a specified number of failed sign-in attempts. Can unlock via email or after a specified time period.
+
+# LDAP Authentication
+# ==
+
+o Notes
+	https://github.com/cschiewek/devise_ldap_authenticatable
+
+o install devise_ldap_authenticatable
+echo 'gem "devise_ldap_authenticatable", "~> 0.6.1"' >> Gemfile
+bundle
+rails generate devise_ldap_authenticatable:install
+
+o define LDAP connection settings for tes, development and production
+      create  config/ldap.yml
+o set LDAP configuration settings
+      insert  config/initializers/devise.rb
+o enable/disable LDAP authentication
+        gsub  app/models/user.rb
+o rescue LDAP failures
+      insert  app/controllers/application_controller.rb
+
+o disable in user model for optional use
+  # :ldap_authenticatable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
+
+# Active Directory
+# ==
+
+o Notes: https://github.com/ajrkerr/devise_active_directory_authenticatable
+
+# OmniAuth
+# ==
+
+o Notes: Facebook, Twitter, Github, etc.
+	https://github.com/plataformatec/devise/wiki/OmniAuth%3A-Overview
+	https://github.com/intridea/omniauth/wiki/List-of-Strategies
+
+# Tests
+# ==
+
+o modify tests
+#	modified:   features/step_definitions/user_steps.rb
+
+o create reset password feature
+#	features/users/reset_password.feature
+
+# Test and commit
+# ==
+
+rspec
+22 examples, 0 failures
+
+cucumber
+20 scenarios (20 passed)
+81 steps (81 passed)
+
+git add .
+git commit -am "authentication"
+

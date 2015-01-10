@@ -1,0 +1,106 @@
+# ==
+# REST-ful ACL
+# ==
+
+6) REST-ful ACL: Pages are owned by the author that created them, where the author can choose to
+Allow, Deny, or Grant (can change ACLs) access to CREATE, READ, UPDATE, and DELETE actions
+to other groups of users in an inheritable manner.
+
+# Permissions
+# ==
+
+	Create a polymorphic access_control model, such that any other model can have_many access_controls as accessible.
+	A model can have many ordered controls, like:
+	1) Deny All Create, Read, Update, Delete
+	2) Grant Admin Group
+	3) Allow Development Group Create, Read, Update, Delete
+	4) Allow User Group Read, Update
+	5) Allow All Read 
+	
+o Notes
+	http://railscasts.com/episodes/154-polymorphic-association-revised?autoplay=true
+
+o generate access_control model
+rails generate model access_control accessible_id:integer accessible_type:string control:string position:integer group:references create_access:boolean read_access:boolean update_access:boolean destroy_access:boolean  --no-test-framework
+
+o modify default migration
+class CreateAccessControls < ActiveRecord::Migration
+  def change
+    create_table :access_controls do |t|
+      t.integer :accessible_id, :null => :false
+      t.string :accessible_type, :null => :false
+      t.string :control, :default => "Allow"
+      t.integer :position, :default => 0
+      t.references :group, :null => :false
+      t.boolean :create_access, :default => true
+      t.boolean :read_access, :default => true
+      t.boolean :update_access, :default => true
+      t.boolean :destroy_access, :default => true
+
+      t.timestamps
+    end
+    add_index :access_controls, :group_id
+    add_index :access_controls, [:accessible_id, :accessible_type]
+  end
+end
+
+o add to database
+rake db:migrate
+rake db:test:prepare
+
+o modify default access_control model
+class AccessControl < ActiveRecord::Base
+  belongs_to :group
+  belongs_to :accessible, :polymorphic => true
+  attr_accessible :position, :control, :group, :create_access, :read_access, :update_access, :destroy_access
+  default_scope :order => 'position ASC'
+end
+
+o add access_control to abstract_page, property, summary models
+belongs_to :parent_control, :class_name => 'AbstractPage'
+attr_accessible :access_controls_attributes, :parent_control, :inherited_access_controls
+has_many :access_controls, as: :accessible
+accepts_nested_attributes_for :access_controls, :allow_destroy => true
+
+o create model ControllerPage
+
+o add default * Group and ControllerPage(s) to db/seeds
+
+o add access_control support within locale
+
+# cancan
+# ==
+
+o Notes
+	https://github.com/ryanb/cancan
+	http://railscasts.com/episodes/192-authorization-with-cancan?view=asciicast
+
+o install cancan
+echo 'gem "cancan", "~> 1.6.8"' >> Gemfile
+bundle
+rails generate cancan:ability
+
+o modify model/ability
+
+o modify application controller
+rescue_from CanCan::AccessDenied do |exception|
+  redirect_to :back, :alert => exception.message
+end
+
+o add authorize to all controllers, but application and sessions
+
+# Test and commit
+# ==
+
+rspec
+21 examples, 0 failures
+
+cucumber
+26 scenarios (26 passed)
+175 steps (175 passed)
+
+yard doc
+42.06% documented
+
+git add .
+git commit -am "accessible"

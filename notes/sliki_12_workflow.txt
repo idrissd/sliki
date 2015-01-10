@@ -1,0 +1,93 @@
+# ==
+# Workflow
+# ==
+
+8) Workflow: Kinds of things can have states that are transitioned by events that may perform actions.
+
+o Notes
+	http://railscasts.com/episodes/154-polymorphic-association-revised?autoplay=true
+	https://github.com/pluginaweek/state_machine
+	
+o install state_machine
+echo 'gem "state_machine", "~> 1.1.2"' >> Gemfile
+bundle
+
+o generate transition model
+rails generate model transition thing:references from_state:string to_state:string on_event:string --no-test-framework
+
+o update transition model
+attr_accessible :to_state, :from_state, :on_event
+belongs_to :thing
+validates :thing, :from_state, :to_state, :on_event, :presence => true
+
+o update migration
+t.references :thing, :null => :false
+t.string :from_state, :null => :false
+t.string :to_state, :null => :false
+t.string :on_event, :null => :false
+
+o update thing model
+attr_accessible :transitions, :transitions_attributes
+has_many :transitions, :dependent => :destroy
+accepts_nested_attributes_for :transitions, :reject_if => lambda { |a| a[:from_state].blank? || a[:to_state].blank? || a[:on_event].blank? }, :allow_destroy => true
+
+o update kind model
+attr_accessible :name, :values, :state
+
+  def machine
+    kind = self
+    @machine ||= Machine.new(kind, :initial => "new") do
+      kind.thing.transitions.each {|attrs| transition(attrs)}
+      after_transition do
+        kind.state = kind.machine.state
+        kind.save
+      end
+    end
+  end
+end
+
+class Machine
+  def self.new(object, *args, &block)
+    machine = Class.new do
+      def definition
+        self.class.state_machine
+      end
+    end
+    machine.state_machine(*args, &block)
+    machine.new
+  end
+end
+
+o generate event controller
+rails generate controller events --no-test-framework --no-assets --no-helper --no-stylesheets
+
+o update routes
+resources :events, :only => [:update]
+
+o add update method to kind_controller
+def update
+  @kind = Kind.find(params[:id])
+  event = params[:event]
+  if event.present? and @kind.thing.transitions.map(&:on_event).include?(event) and @kind.machine.methods.include?(event.to_sym) and @kind.machine.send(event.to_sym)
+    flash[:notice] = dt("notices.transition", :model => @kind.name, :event => event)
+  end
+  redirect_to :back, :notice => dt("notices.transition", :model => @kind.name, :event => event)
+end
+
+o update locale with notices.event
+
+# Test and commit
+# ==
+
+rspec
+21 examples, 0 failures
+
+cucumber
+26 scenarios (26 passed)
+175 steps (175 passed)
+
+yard doc
+40.71% documented
+
+git add .
+git commit -am "workflow"

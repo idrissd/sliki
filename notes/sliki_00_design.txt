@@ -1,0 +1,91 @@
+# Sliki App Top 20, no 21 Features
+# ==
+
+o Features
+
+	Most of sliki's features are provided by included gems or rails itself (ie written by others).
+	Some features aid in software development, but most benefit users and the UI.
+	
+	1) Semantic CRUD: Perform (Create Read, Update, Delete) operations on the semantic properties of kinds of things,
+	and author free-form pages that reference the values of these semantic properties.
+		
+	2) Responsive UI: A beautiful, native-like, HTML5 UI that scales to look best on any browser or mobile device.
+	
+	3) Friendly perma-linked URLs: Permanent, logical, human readable links to all pages of kinds of things.
+	
+	4) Flexible Authentication: Local authentication that's easily switched to remote sources (LDAP, AD, Kerberos, Facebook, Twitter).
+	
+	5) REST-ful API: A REST-ful (Representational State Transfer) HTML, JSON, XML, CSV, XLS API (Application Programming Interface) to pages of kinds of things,
+	meaning one can perform CRUD operations through HTML, JSON, XML, CSV, and XLS.
+	
+	6) REST-ful ACL: Pages are owned by the author that created them, where the author can choose to
+	grant GRANT, INDEX, CREATE, READ, UPDATE, and DELETE access control to other groups of users in an inheritable manner.
+	
+	7) Revertible: Page change history is tracked by author and date. Create, Update, Delete actions can be Undone/Redone.
+	Pages change history can be reviewed and reverted to a prior version.
+	
+	8) Workflow: Kinds of things can have states that are transitioned by events that may perform actions.
+
+	9) Alerts: Request-able alerts to page changes or events through Email or Twitter. 
+
+	10) Cloud file storage: Attach files to pages that are stored locally or on Amazon S3 or Dropbox storage.
+		
+	11) Background Tasks: Schedule the execution of recurring tasks for background execution.
+
+	12) Plugins and Themes: Simple theme and plugin architecture for extending features and customizing look and feel by drag and drop installation.
+
+	13) Multi-tenant: Each topic provides a separate namespace and is served within its own subdomain, permitting multi-tenant uses.
+
+	14) Interactive Tables and Plots: Easily create beautiful interactive reports of properties of kinds of things
+	as mathematical expressions, or interactive tables and plots.
+	
+	15) Graphical Relationship Browser: Graphically view and browse the relationships between kinds of things.
+	
+	16) Internationalization: Modify strings in a single file to support additional languages, including non-ascii languages.
+
+	17) Drag and Drop Installation: Perform D&D installation that minimally depends only on the ruby and sqlite3 binaries for execution on Mac OS, Linux, and Windows.
+	
+	18) Flexible Deployment Stack: Use the included web server (WEBrick) and database (sqlite3) or easily mix/match use of various external
+	web servers (apache, mod_rails, Heroku) and databases (mysql, postgres, mongodb).
+			
+	19) Development, Test, Production: Built-in support for simultaneous development, test, and production environments.
+	
+	20) Federate-able: Easily federate resources between multiple instances of sliki.
+	
+	21) Testable: RSpec for TDD and Unit/Functional tests, Cucumber for BDD and Integration tests (including the web UI, CSS, and js).
+
+	22) Documented: Automated API documentation generation.
+		
+	23) ROR: Developed in Ruby on Rails for rock solid, bug free reliability. Very little, but beautiful DRY (Don't Repeat Yourself) code
+	written in ruby, HTML (erb or haml), javascript (coffee script), and CSS (SCSS).
+
+# Data Model
+# ==
+
+o We're making an application that permits CRUD operations on pages,
+with a data model that looks roughly like this.
+
+	Summary
+   //\\
+     |
+    \/
+->>Page<->>Property
+|   ^
+|___|
+
+o A Page is an abstract model that comes in five types: Group, Page, Topic, Thing, and Kind
+o A Property is an abstract model that come in seven (or more) types: StringProperty, BooleanProperty, NumberProperty, DateTimeProperty, FileProperty, ExpressionProperty, ThingProperty
+o A Summary is an abstract model that comes in five (or more) types: ExpressionSummary, DataTableSummary, PiePlotSummary, LinePlotSummary, BarPlotSummary
+
+Group: A Group has a name, an author, and many users
+Topic: A Topic has a name, an author, and many Things
+Page: A Page belongs to a Topic and has a name and an author
+Thing: A Thing belongs to a Topic, has a name, an author, many Kinds, many Properties, many Summaries, a position, x, and y for positioning Things, a color for making things distinguishable
+Kind: A Kind has a name, an author, belongs to a Thing, and values for each of it's parent Thing's Properties
+
+Property: A Property belongs to a Thing, has a name, position for ordering Properties, several other attributes, and a view for rendering preferences
+StringProperty, BooleanProperty, NumberProperty, DateTimeProperty, FileProperty, ExpressionProperty, ThingProperty: don't have any special features within their models, at least yet
+
+Summary: A Summary belongs a Thing, has a name, position, and a view for rendering preferences
+ExpressionSummary, DataTableSummary, PiePlotSummary, LinePlotSummary, BarPlotSummary: don't have any special features within their models, at least yet
+

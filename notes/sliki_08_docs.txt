@@ -1,0 +1,59 @@
+# ==
+# Documentation
+# ==
+
+o Notes
+	http://yardoc.org
+	
+o add gems for documentation generation
+group :development do
+  gem "guard-yard", ">= 2.0.0"
+  gem "redcarpet", "~> 2.1.1"
+  gem "yard-cucumber", "~> 2.2.1"
+  gem "yard-rails", "~> 0.3.0"
+  gem "yard", "~> 0.8.2.1"
+end
+
+o install gems
+bundle
+
+o initialize guard-yard
+guard init yard
+
+o create .yardopts
+--markup           markdown
+--markup-provider  redcarpet
+--title            'Sliki Documentation'
+--hide-void-return
+--protected
+--private
+app/**/*.rb
+features/**/*.feature
+features/**/*.rb
+
+o create documentation
+yard doc
+
+o view documentation
+yard server
+http://localhost:8808/
+
+o getting started
+http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
+
+o tags
+http://rubydoc.info/docs/yard/file/docs/Tags.md
+
+# Test and commit
+# ==
+
+rspec
+22 examples, 0 failures
+
+cucumber
+20 scenarios (20 passed)
+81 steps (81 passed)
+
+git add .
+git commit -am "documentation"
+

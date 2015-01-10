@@ -1,0 +1,61 @@
+# ==
+# Internationalization
+# ==
+
+o Notes:
+	http://guides.rubyonrails.org/i18n.html
+	https://github.com/iain/http_accept_language
+	
+	12) Internationalization: Modify strings in a single file to support additional languages, including non-ascii languages.
+
+o It's very simple to add multi-language locale support.
+	Simply use the t() "translation" helper method throughout the views and
+	create a config/locales/<language[-REGION]>.yml for each language you wish to support.
+	Every word on every button and page can be rendered for a new language by creating an associated <language>.yml file
+
+o I have wrapped the t() method with my dt() method, such the an appropriate message in the proper translation will be returned
+	in the event that no translation has been provided.
+
+o modify locales for English
+#	modified:   config/locales/devise.en.yml
+#	modified:   config/locales/en.yml
+
+o modify user_steps for changes to devise locales
+#	modified:   features/step_definitions/user_steps.rb
+
+o modify devise views for changes to devise locales
+#	modified:   app/views/devise/registrations/new.html.erb
+#	modified:   app/views/devise/sessions/new.html.erb
+
+o add Chinese as an example
+#	config/locales/devise.zh-TW.yml
+#	config/locales/zh-TW.yml
+
+o TODO: will need to add the rails default messages
+
+o install http_accept_language, this fork works with tests
+echo 'gem "http_accept_language", "~> 2.0.0.pre", git: "git://github.com/zzet/http_accept_language.git"' >> Gemfile
+bundle
+
+o add before_filter to application_controller to set locale based on user's browser preference
+  before_filter :set_locale
+...  
+private
+...
+  def set_locale
+    I18n.locale = http_accept_language.preferred_language_from(I18n.available_locales)
+  end
+
+# Test and commit
+# ==
+
+rspec
+22 examples, 0 failures
+
+cucumber
+20 scenarios (20 passed)
+81 steps (81 passed)
+
+rake assets:clean
+git add .
+git commit -am "internationalization"
