@@ -12,6 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require turbolinks
-//= require bootstrap-sprockets
+//= require bootstrap
+//= require bootstrap-colorpicker
+//= require bootstrap-datetimepicker
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require highcharts
+//= require raphael
 //= require_tree .
+$('.dropdown-toggle').dropdown();

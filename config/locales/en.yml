@@ -20,4 +20,348 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    models:
+      user:
+        one: &user User
+        other: &users Users
+      group:
+        one: &group Group
+        other: &groups Groups
+      topic:
+        one: &topic Topic
+        other: &topics Topics
+      page:
+        one: &page Page
+        other: &pages Pages
+      group:
+        one: &group Group
+        other: &groups Groups
+      thing:
+        one: &thing Thing
+        other: &things Things
+      kind:
+        one: &kind Kind
+        other: &kinds Kinds
+      access_control:
+        one: &access_control Access Control
+        other: &access_controls Access Controls
+      property:
+        one: &property Property
+        other: &properties Properties
+      string_property: &string_property String
+      boolean_property: &boolean_property Boolean
+      number_property:  &number_property Number
+      date_time_property: &date_time_property DateTime
+      expression_property: &expression_property Function
+      file_property: &file_property File
+      thing_property: &thing_property Relationship
+      summary:
+        one: &summary Summary
+        other: &summaries Summaries
+      expression_summary: &expression_summary Function
+      data_table_summary: &data_table_summary Data Table
+      pie_plot_summary: &pie_plot_summary Pie Plot
+      line_plot_summary: &line_plot_summary Line Plot
+      bar_plot_summary: &bar_plot_summary Bar Chart
+    attributes:
+      user:
+        name: Name
+        email: Email
+        password: Password
+        password_confirmation: Password Confirmation
+        current_password: Current Password
+      group:
+        name: Name
+        users: *users
+      topic:
+        name: Name
+        things: *things
+      page:
+        name: Name
+        topic: *topic
+      thing:
+        name: Name
+        color: Color
+        position: Position
+        x: X Pos
+        y: Y Pos
+        topic: Topic
+        properties: *properties
+        summaries:  *summaries
+        things: *things
+      kind:
+        name: Name
+        values: Values
+        thing: *thing
+      access_control:
+        control: Control
+        group: *group
+        create_access: Create
+        read_access: Read
+        update_access: Update
+        destroy_access: Delete
+      property:
+        name: Name
+        position: Position
+        many: Has Many?
+        required: Is Required?
+        restricted: Restricted To
+        matches: Matches
+        minimum: Minimum
+        maximum: Maximum
+        form: Form
+        label: Label
+        hint: Hint
+        placeholder: Placeholder
+        tooltip: Tooltip
+        default: Default
+        expression: *expression_property
+        relationship: Relationship
+        date_time_input: DateTime
+        view: View
+        hperlink: Hyperlink
+        units: Units
+        precision: Precision
+        boolean_format: Format
+        date_time_format: Format
+        expression_format: Format
+        css_class: CSS Class
+        thing: *thing
+        validations: Validations
+      summary:
+        name: Name
+        position: Position
+        view: View
+        title: Title
+        properties: *properties
+        expression: *expression_property
+        expression_format: Format
+        categories: Categories
+        series: Series
+        y_axis_title: Y Axis Title
+        thing: *thing
+  app:
+    name: Sliki
+    copyright: BioTeam 2015
+    missing: No Locale
+  events:
+    create: Created
+    update: Updated
+    destroy: Destroyed
+  notices:
+    create: "%{model} was successfully created. %{link}"
+    update: "%{model} was successfully updated. %{link}"
+    destroy: "%{model} was successfully destroyed. %{link}"
+    undo: Undo
+    undid:  Undid
+    redo: Redo
+    redid: Redid
+    reverted: Reverted
+    revision: "%{event} %{duration} ago by %{whom}"
+    event: "Successfully %{event} %{model}"
+  navbar:
+    mail: Mail Permalink
+    excel_down: Download Excel
+    excel_up: Upload Excel
+    pdf: PDF
+    print: Print
+    json: JSON
+    xml: XML
+    profile: Profile
+    comments: Comments
+    topics: Topics
+    groups: Groups
+  actions:
+    cancel: Cancel
+    done: Done
+    destroy: Delete
+    edit: Edit
+    back: "< %{model}"
+    new: New
+    add: "Add %{model}"
+    confirm: Are you sure?
+    submit: Submit
+    save: Save
+    update: Update
+    options: Options
+    register: Register
+    unregister: Delete My Account
+    forgot: Forgot
+    login: Login
+    confirm: Confirm
+    unlock: Unlock
+    omniauth: "Register with %{model}"
+  placeholders:
+    new: "New %{model}"
+    create: "New %{model}"
+    edit: "Edit %{model}"
+    update: "Edit %{model}"
+  tooltips:
+    string_property: *string_property
+    boolean_property: *boolean_property
+    number_property: *number_property
+    date_time_property: *date_time_property
+    expression_property: *expression_property
+    file_property: *file_property
+    thing_property: *thing_property
+    expression_summary: *expression_summary
+    data_table_summary: *data_table_summary
+    pie_plot_summary: *pie_plot_summary
+    line_plot_summary: *line_plot_summary
+    bar_plot_summary: *bar_plot_summary
+    restricted: "eeny,meeny,miny,moe"
+    property_expression: "property * 3.14"
+    summary_expression: "sum(property)"
+    property_boolean: "yes,no"
+  select:
+    property:
+      expression_format:
+        string: *string_property
+        number: *number_property
+        boolean: *boolean_property
+      units:
+        delimiter: Delimiter
+        human: Human
+        percentage: Percentage
+        currency: Currency
+        distance: Distance
+        area: Area
+        volume: Volume
+        mass: Mass
+        time: Time
+        temperature: Temperature
+      string_input:
+        string: String
+        email: Email
+        url: URL
+        tel: Telephone
+        password: Password
+        text: Text
+      number_input:
+        integer: Integer
+        decimal: Decimal
+        float: Float
+      date_time_input:
+        date: Date
+        time: Time
+        date_time: DateTime
+    summary:
+      expression_format:
+        string: *string_property
+        number: *number_property
+        boolean: *boolean_property
+  pages:
+    default: &page_default
+      title: "%{model}"
+      model: *page
+      back: *pages
+    default_create: &page_default_create
+      <<: *page_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &page_default_update
+      <<: *page_default
+      title: "Edit %{model}"
+      submit: "Update %{model}"
+    index:
+      <<: *page_default
+      model: *pages
+      back: *topics
+    show: *page_default
+    destroy: *page_default
+    new: *page_default_create
+    create: *page_default_create
+    edit: *page_default_update
+    update: *page_default_update
+  groups:
+    default: &group_default
+      title: "%{model}"
+      model: *group
+      back: *groups
+    default_create: &group_default_create
+      <<: *group_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &group_default_update
+      <<: *group_default
+      title: "Edit %{model}"
+      submit: "Update %{model}"
+    index:
+      <<: *group_default
+      model: *groups
+      back: *topics
+    show: *group_default
+    destroy: *group_default
+    new: *group_default_create
+    create: *group_default_create
+    edit: *group_default_update
+    update: *group_default_update
+  topics:
+    default: &topic_default
+      title: "%{model}"
+      model: *topic
+      back: *topics
+    default_create: &topic_default_create
+      <<: *topic_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &topic_default_update
+      <<: *topic_default
+      title: "Edit %{model}"
+      submit: "Update %{model}"
+    index:
+      <<: *topic_default
+      model: *topics
+    show: *topic_default
+    destroy: *topic_default
+    new: *topic_default_create
+    create: *topic_default_create
+    edit: *topic_default_update
+    update: *topic_default_update
+  things:
+    default: &thing_default
+      title: "%{model}"
+      model: *thing
+      back: *things
+    default_create: &thing_default_create
+      <<: *thing_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &thing_default_update
+      <<: *thing_default
+      title: "Edit %{model}"
+      submit: "Update %{model}"
+    index:
+      <<: *thing_default
+      model: *things
+      back: *topics
+    show: *thing_default
+    destroy: *thing_default
+    new: *thing_default_create
+    create: *thing_default_create
+    edit: *thing_default_update
+    update: *thing_default_update
+  kinds:
+    default: &kind_default
+      title: "%{model}"
+      model: *kind
+    default_create: &kind_default_create
+      <<: *kind_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &kind_default_update
+      <<: *kind_default
+      title: "Edit %{model}"
+      submit: "Update %{model}"
+    index:
+      <<: *kind_default
+      model: *kinds
+      back: *things
+    show: *kind_default
+    destroy: *kind_default
+    new: *kind_default_create
+    create: *kind_default_create
+    edit: *kind_default_update
+    update: *kind_default_update
+

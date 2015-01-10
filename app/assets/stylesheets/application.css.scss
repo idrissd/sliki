@@ -13,3 +13,10 @@
  *= require_tree .
  *= require_self
  */
+ @import 'bootstrap';
+ @import 'bootstrap-datetimepicker';
+ @media (min-width:769px) {
+ .dropdown:hover .dropdown-menu {
+ display: block;
+ }
+ }
