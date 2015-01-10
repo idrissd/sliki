@@ -1,0 +1,29 @@
+<h1>Listing kinds</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Thing</th>
+      <th>Name</th>
+      <th>Values</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @kinds.each do |kind| %>
+      <tr>
+        <td><%= kind.thing %></td>
+        <td><%= kind.name %></td>
+        <td><%= kind.values %></td>
+        <td><%= link_to 'Show', kind %></td>
+        <td><%= link_to 'Edit', edit_kind_path(kind) %></td>
+        <td><%= link_to 'Destroy', kind, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Kind', new_kind_path %>

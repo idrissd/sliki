@@ -1,0 +1,2 @@
+class Group < AbstractPage
+end

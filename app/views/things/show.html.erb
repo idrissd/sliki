@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @thing.topic %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @thing.name %>
+</p>
+
+<p>
+  <strong>Color:</strong>
+  <%= @thing.color %>
+</p>
+
+<p>
+  <strong>Position:</strong>
+  <%= @thing.position %>
+</p>
+
+<p>
+  <strong>X:</strong>
+  <%= @thing.x %>
+</p>
+
+<p>
+  <strong>Y:</strong>
+  <%= @thing.y %>
+</p>
+
+<%= link_to 'Edit', edit_thing_path(@thing) %> |
+<%= link_to 'Back', things_path %>

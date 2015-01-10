@@ -109,7 +109,7 @@ rails generate model subscription topic:references user:references --no-test-fra
 # ==
 
 o extend User
-rails generate migration add_slug_to_users is_admin:boolean authentication_token:string slug:string:index
+rails generate migration add_auth_token_to_users authentication_token:string
 
 o add friendly_id to AbstractPage
 rails generate migration add_slug_to_abstract_pages slug:string:index
