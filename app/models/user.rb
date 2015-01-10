@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
   enum role: [:user, :vip, :admin]
   after_initialize :set_default_role, :if => :new_record?
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :finders]
+
   def set_default_role
     self.role ||= :user
   end

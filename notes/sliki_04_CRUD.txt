@@ -24,13 +24,6 @@ o Notes: Simple Form is a gem that permits developers to make cleaner, DRYer web
 
     = simple_form_for(@user, :html => {:class => 'form-horizontal' }) do |form|
 
-o add gem to Gemfile
-echo 'gem "simple_form", "~> 2.0.2"' >> Gemfile
-
-o install simple_form with bootstrap option (update our forms for us)
-bundle
-rails generate simple_form:install --bootstrap
-
 # ==
 # Friendly perma-linked URLs
 # ==
@@ -52,12 +45,17 @@ o Friendly ID provides feature #4: perma-linked URLs to all kinds and things.
 	http://myhost.com/kinds/people/things/bill-van-etten
 	
 o add gem to Gemfile
-echo 'gem "friendly_id", "~> 4.0.8"' >> Gemfile
+gem 'friendly_id'
 
 o add friendly_id slug to pages
 bundle
 rails generate friendly_id
+rails migration add_slug_to_users slug:string:uniq
 rake db:migrate
+
+o add to user model
+extend FriendlyId
+friendly_id :name, use: [:slugged, :history]
 
 # Scaffolds
 # ==
