@@ -1,11 +1,10 @@
-<%= simple_form_for(@group) do |f| %>
-  <%= f.error_notification %>
-
+<%= simple_form_for @group do |f| %>
   <div class="form-inputs">
-    <%= f.input :name %>
+		<%= f.input :name, :as => :string, :required => true, :placeholder => f.object.class.human_attribute_name(:name), :autofocus => true, :input_html => {:rel => "tooltip", :title => f.object.class.human_attribute_name(:name)} %>
+		<%= f.association :users, :collection => User.all, :input_html => {:class => "select2"} %>
   </div>
-
   <div class="form-actions">
-    <%= f.button :submit %>
+		<%= link_to dt('actions.cancel'), group_path(@group), :class => 'btn btn-default' %>
+		<%= f.button :submit, :class => 'btn btn-primary', :value => dt("#{controller_name}.#{action_name}.submit", :model => dt("#{controller_name}.#{action_name}.model")) %>
   </div>
 <% end %>

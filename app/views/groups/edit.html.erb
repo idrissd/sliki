@@ -1,6 +1,3 @@
-<h1>Editing group</h1>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @group.name) %></h1>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @group %> |
-<%= link_to 'Back', groups_path %>

@@ -1,9 +1,13 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @group.name %>
-</p>
-
-<%= link_to 'Edit', edit_group_path(@group) %> |
-<%= link_to 'Back', groups_path %>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @group.name) %></h1>
+<dl class="dl-horizontal">
+  <dt><%= Group.human_attribute_name(:name) %></dt>
+  <dd><%= @group.name %></dd>
+	<% @group.users.each do |user| %>
+	<dt><%= Group.human_attribute_name(:user) %></dt>
+	<dd><%= user.name %></dd>
+	<% end %>
+</dl>
+<div class="form-actions">
+		<%= link_to dt('actions.edit', :model => Group.model_name.human), edit_group_path(@group), :class => 'btn btn-primary' %>
+		<%= link_to dt("actions.destroy", :model => Group.model_name.human), group_path(@group), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
+</div>

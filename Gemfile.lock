@@ -329,6 +329,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   launchy
+  momentjs-rails
   paper_trail
   pry-rails
   pry-rescue

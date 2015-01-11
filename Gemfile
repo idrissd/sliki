@@ -15,6 +15,7 @@ gem 'select2-rails'
 gem 'bootstrap3-datetimepicker-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
+gem 'momentjs-rails'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'bootstrap-sass'
