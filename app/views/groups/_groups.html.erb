@@ -3,6 +3,7 @@
 	  <tr>
 	    <th><%= Group.human_attribute_name(:name) %></th>
 	    <th><%= Group.human_attribute_name(:author) %></th>
+	    <th><%= Group.human_attribute_name(:users) %></th>
 	  </tr>  	
   </thead>
   <tbody>
@@ -14,6 +15,7 @@
 					<%= link_to group.name, group_path(group) %>
 				</td>
 				<td><%= link_to group.author.name, user_path(group.author) %></td>
+				<td><%= comma_separated_links_for(group.users.to_a) %></td>
 		  </tr>
 		<% end %>
   </tbody>

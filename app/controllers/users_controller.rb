@@ -1,30 +1,34 @@
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :update, :destroy]
+  respond_to :html, :json
+
   # after_action :verify_authorized
 
   def index
     @users = User.all
     # authorize User
+    respond_with(@users)
   end
 
   def show
     # authorize @user
+    respond_with(@user)
   end
 
   def update
     # authorize @user
-    if @user.update_attributes(secure_params)
-      redirect_to users_path, :notice => "User updated."
-    else
-      redirect_to users_path, :alert => "Unable to update user."
+    if @user.update(user_params)
+      flash[:notice] = dt("notices.update", :model => @user.name, :link => undo_link)
     end
+    respond_with(@user, :location => users_url)
   end
 
   def destroy
     # authorize @user
     @user.destroy
-    redirect_to users_path, :notice => "User deleted."
+    flash[:notice] = dt("notices.destroy", :model => @user.name, :link => undo_link)
+    respond_with(@user, :location => users_url)
   end
 
   private
@@ -37,8 +41,12 @@ class UsersController < ApplicationController
     end
   end
   
-  def secure_params
+  def user_params
     params.require(:user).permit(:role)
+  end
+
+  def undo_link
+    view_context.link_to(dt("notices.undo"), version_path(@user.versions.last.id, :reversion => 'undo'), :method => :put)
   end
 
 end

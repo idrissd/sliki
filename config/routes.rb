@@ -2,7 +2,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   # devise_for :users, :controllers => { :sessions => "sessions" }
   devise_for :users, :controllers => { :registrations => "registrations" }
-  resources :users, :only => [:show, :index]
+  resources :users, :only => [:show, :index, :update]
   resources :versions, :only => [:show, :update]
   resources :events, :only => [:update]
   resources :groups
