@@ -6,8 +6,12 @@ class AbstractPage < ActiveRecord::Base
   accepts_nested_attributes_for :access_controls, :allow_destroy => true
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :name, use: [:slugged, :finders, :history]
   has_paper_trail
+
+  def should_generate_new_friendly_id?
+    name_changed?
+  end
 
   def inherited_access_controls
     i = self

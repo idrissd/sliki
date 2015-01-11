@@ -1,9 +1,9 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @topic.name %>
-</p>
-
-<%= link_to 'Edit', edit_topic_path(@topic) %> |
-<%= link_to 'Back', topics_path %>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @topic.name) %></h1>
+<dl class="dl-horizontal">
+  <dt><%= Topic.human_attribute_name(:name) %></dt>
+  <dd><%= @topic.name %></dd>
+</dl>
+<div class="form-actions">
+		<%= link_to dt('actions.edit', :model => Topic.model_name.human), edit_topic_path(@topic), :class => 'btn btn-primary' %>
+		<%= link_to dt("actions.destroy", :model => Topic.model_name.human), topic_path(@topic), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
+</div>

@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:role)
+    params.require(:user).permit(:role, :name, :email)
   end
 
   def undo_link

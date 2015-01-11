@@ -12,6 +12,11 @@ class Thing < AbstractPage
   accepts_nested_attributes_for :transitions, :reject_if => lambda { |a| a[:from_state].blank? || a[:to_state].blank? || a[:on_event].blank? }, :allow_destroy => true
   validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :name, use: [:slugged, :finders, :history]
   has_paper_trail
+
+  def should_generate_new_friendly_id?
+    name_changed?
+  end
+
 end
