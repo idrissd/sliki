@@ -4,7 +4,7 @@ class Property < ActiveRecord::Base
   store :form, accessors: [:input, :label, :hint, :placeholder, :tooltip, :default, :expression, :file_types, :relationship, :string_input, :number_input, :date_time_input]
   store :view, accessors: [:hyperlink, :units, :precision, :boolean_format, :date_time_format, :expression_format, :css_class]
   belongs_to :thing
-  default_scope { order('position') }
+  # default_scope { order(position: :asc) }
   validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
   belongs_to :parent_control, :class_name => 'AbstractPage'
   has_many :access_controls, as: :accessible

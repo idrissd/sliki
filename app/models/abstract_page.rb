@@ -1,6 +1,6 @@
 class AbstractPage < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
-  default_scope { order(name: :asc) }
+  # default_scope { order(name: :asc) }
   belongs_to :parent_control, :class_name => 'AbstractPage'
   has_many :access_controls, as: :accessible
   accepts_nested_attributes_for :access_controls, :allow_destroy => true

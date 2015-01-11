@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable #, :token_authenticatable
  # before_save :ensure_authentication_token
- default_scope { order('name') }
+ # default_scope { order(name: :asc) }
  has_many :topics
  has_many :things
  has_many :kinds

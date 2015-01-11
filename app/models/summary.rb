@@ -1,7 +1,7 @@
 class Summary < ActiveRecord::Base
   belongs_to :thing
   store :view, accessors: [:title, :properties, :expression, :expression_format, :categories, :series, :y_axis_title]
-  default_scope { order('position') }
+  # default_scope { order(position: :asc) }
   validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
   belongs_to :parent_control, :class_name => 'AbstractPage'
   has_many :access_controls, as: :accessible

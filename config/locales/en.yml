@@ -173,6 +173,7 @@ en:
     comments: Comments
     topics: Topics
     groups: Groups
+    signout: Sign out
   actions:
     cancel: Cancel
     done: Done
