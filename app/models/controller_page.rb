@@ -1,0 +1,2 @@
+class ControllerPage < AbstractPage
+end

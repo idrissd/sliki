@@ -1,0 +1,16 @@
+<p>
+	<%= dt("notices.revision", :event => dt("events.#{@item.versions.last.event}"), :duration => time_ago_in_words(@item.versions.last.created_at), :whom => User.find(@item.versions.last.whodunnit).name )%>
+</p>
+<%= render :partial => "#{@item.versions.last.item.type.parameterize.pluralize}/show", :locals => { :item => @item } %>
+<% @versions.each do |version| %>
+	<% if version.next %>
+		<p>
+			<%= dt("notices.revision", :event => dt("events.#{version.event}"), :duration => time_ago_in_words(version.created_at), :whom => User.find(version.whodunnit).name )%>
+		</p>
+		<% if version.next.reify %>
+		<%= link_to("Revert", version_path(version.next), :method => :put) %>
+		<%= render :partial => "#{version.item.type.parameterize.pluralize}/show", :locals => { :item => version.next.reify } %>
+		<% end %>
+	<% end %>
+	<hr>
+<% end %>

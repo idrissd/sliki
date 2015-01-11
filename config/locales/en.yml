@@ -153,6 +153,7 @@ en:
     create: "%{model} was successfully created. %{link}"
     update: "%{model} was successfully updated. %{link}"
     destroy: "%{model} was successfully destroyed. %{link}"
+    alert: "%{model} was not updated."
     undo: Undo
     undid:  Undid
     redo: Redo

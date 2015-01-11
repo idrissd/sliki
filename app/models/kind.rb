@@ -1,10 +1,10 @@
 class Kind < AbstractPage
   belongs_to :thing
   store :values
-  validates :name, :presence => true, :uniqueness => {:scope => :thing_id, :case_sensitive => false}
-  has_paper_trail
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
+  has_paper_trail
 
   def machine
     kind = self
