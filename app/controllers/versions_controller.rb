@@ -5,13 +5,8 @@ class VersionsController < ApplicationController
 
   respond_to :html, :json, :xml
 
-  # Controller's show action
-  #
-  # @param id [Version]
-  # @example
-  #   GET /versions/id
+  # GET /versions/id
   def show
-    @versions = @item.versions.reverse
     @item = AbstractPage.find(@version.item_id)
     @versions = @item.versions.reverse
   end
@@ -21,9 +16,9 @@ class VersionsController < ApplicationController
   # @param id [Version]
   # @param reversion [String] `redo`, `undo`, or `revert` default: `revert`
   # @example
-  #   PUT /versions/id[?reversion=redo|undo|revert]
+  # PUT /versions/id[?reversion=redo|undo|revert]
   def update
-    # revert to the previous version
+    # previous version was not a create, so revert
     if @version.reify
       @version.reify.save!
     # previous version was create, so destroy
