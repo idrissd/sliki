@@ -22,5 +22,6 @@
 //= require bootstrap-datetimepicker
 //= require highcharts
 //= require raphael
+//= require zeroclipboard
 //= require_tree .
 $('.dropdown-toggle').dropdown();

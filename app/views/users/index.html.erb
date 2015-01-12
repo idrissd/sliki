@@ -1,2 +1,2 @@
-<h1><%= User.model_name.human(:count => 2) %></h1>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model")) %></h1>
 <%= render :partial => "users", :locals => { :users => @users } %>

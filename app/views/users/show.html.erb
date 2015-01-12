@@ -1,3 +1,7 @@
-<h3>User</h3>
-<p>Name: <%= @user.name %></p>
-<p>Email: <%= mail_to @user.email %></p>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @user.name) %></h1>
+<dl class="dl-horizontal">
+  <dt><%= User.human_attribute_name(:name) %></dt>
+  <dd><%= @user.name %></dd>
+  <dt><%= User.human_attribute_name(:email) %></dt>
+  <dd><%= mail_to @user.email %> %></dd>
+</dl>

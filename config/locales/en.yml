@@ -20,6 +20,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      default: '%Y-%m-%d %I:%M %P'
   activerecord:
     models:
       user:
@@ -34,9 +37,6 @@ en:
       page:
         one: &page Page
         other: &pages Pages
-      group:
-        one: &group Group
-        other: &groups Groups
       thing:
         one: &thing Thing
         other: &things Things
@@ -73,15 +73,24 @@ en:
         current_password: Current Password
       group:
         name: Name
+        author: Author
         users: *users
       topic:
         name: Name
+        author: Author
         things: *things
+        pages: *pages
       page:
         name: Name
+        author: Author
         topic: *topic
+      group:
+        name: Name
+        author: Author
+        users: *users
       thing:
         name: Name
+        author: Author
         color: Color
         position: Position
         x: X Pos
@@ -92,6 +101,7 @@ en:
         things: *things
       kind:
         name: Name
+        author: Author
         values: Values
         thing: *thing
       access_control:
@@ -142,18 +152,17 @@ en:
         y_axis_title: Y Axis Title
         thing: *thing
   app:
-    name: Sliki
-    copyright: BioTeam 2015
+    name: Con Tutti!
+    copyright: Con Tutti! 2013
     missing: No Locale
   events:
     create: Created
     update: Updated
     destroy: Destroyed
   notices:
-    create: "%{model} was successfully created. %{link}"
-    update: "%{model} was successfully updated. %{link}"
-    destroy: "%{model} was successfully destroyed. %{link}"
-    alert: "%{model} was not updated."
+    create: "%{model} was successfully created."
+    update: "%{model} was successfully updated."
+    destroy: "%{model} was successfully deleted."
     undo: Undo
     undid:  Undid
     redo: Redo
@@ -161,26 +170,14 @@ en:
     reverted: Reverted
     revision: "%{event} %{duration} ago by %{whom}"
     event: "Successfully %{event} %{model}"
-  navbar:
-    mail: Mail Permalink
-    excel_down: Download Excel
-    excel_up: Upload Excel
-    pdf: PDF
-    print: Print
-    json: JSON
-    xml: XML
-    profile: Profile
-    comments: Comments
-    topics: Topics
-    groups: Groups
-    signout: Sign out
   actions:
     cancel: Cancel
     done: Done
-    destroy: Delete
-    edit: Edit
+    destroy: "Delete %{model}"
+    edit: "Edit %{model}"
     back: "< %{model}"
-    new: New
+    new: "New %{model}"
+    checkout: Checkout
     add: "Add %{model}"
     confirm: Are you sure?
     submit: Submit
@@ -200,99 +197,63 @@ en:
     edit: "Edit %{model}"
     update: "Edit %{model}"
   tooltips:
-    string_property: *string_property
-    boolean_property: *boolean_property
-    number_property: *number_property
-    date_time_property: *date_time_property
-    expression_property: *expression_property
-    file_property: *file_property
-    thing_property: *thing_property
-    expression_summary: *expression_summary
-    data_table_summary: *data_table_summary
-    pie_plot_summary: *pie_plot_summary
-    line_plot_summary: *line_plot_summary
-    bar_plot_summary: *bar_plot_summary
-    restricted: "eeny,meeny,miny,moe"
-    property_expression: "property * 3.14"
-    summary_expression: "sum(property)"
-    property_boolean: "yes,no"
-  select:
-    property:
-      expression_format:
-        string: *string_property
-        number: *number_property
-        boolean: *boolean_property
-      units:
-        delimiter: Delimiter
-        human: Human
-        percentage: Percentage
-        currency: Currency
-        distance: Distance
-        area: Area
-        volume: Volume
-        mass: Mass
-        time: Time
-        temperature: Temperature
-      string_input:
-        string: String
-        email: Email
-        url: URL
-        tel: Telephone
-        password: Password
-        text: Text
-      number_input:
-        integer: Integer
-        decimal: Decimal
-        float: Float
-      date_time_input:
-        date: Date
-        time: Time
-        date_time: DateTime
-    summary:
-      expression_format:
-        string: *string_property
-        number: *number_property
-        boolean: *boolean_property
-  pages:
-    default: &page_default
-      title: "%{model}"
-      model: *page
-      back: *pages
-    default_create: &page_default_create
-      <<: *page_default
+    credit_card_number: "We accept VISA, Mastercard, and American Express and do not retain this number for your security."
+    verification_value: "Credit Card Verification Value. We do not retain this number for your security."
+    card_expires_on: "Credit Card Expiration Date. We do not retain this value for your security."
+    first_name: Credit Card Billing First Name
+    last_name: Credit Card Billing Last Name
+    address1: Credit Card Billing Address
+    address2: Credit Card Billing Address
+    city: Credit Card Billing City
+    state: Credit Card Billing State
+    zip: Credit Card Billing ZIP Code
+    email: Receipt Email Email Address
+    foundation: Foundation your purchase will be donated to.
+    sharing: This information will only be shared with authorized members of Con Tutti!
+  navbar:
+    profile: Account
+    contact: Contact Info
+    signout: Sign out
+  users:
+    default: &user_default
+      title: "%{model}: %{instance}"
+      model: *user
+      confirm: Are you sure?
+    default_create: &user_default_create
+      <<: *user_default
       title: "New %{model}"
       submit: "Create %{model}"
-    default_update: &page_default_update
-      <<: *page_default
-      title: "Edit %{model}"
+    default_update: &user_default_update
+      <<: *user_default
+      title: "Editing %{model}: %{instance}"
       submit: "Update %{model}"
     index:
-      <<: *page_default
-      model: *pages
-      back: *topics
-    show: *page_default
-    destroy: *page_default
-    new: *page_default_create
-    create: *page_default_create
-    edit: *page_default_update
-    update: *page_default_update
+      <<: *user_default
+      title: "%{model}"
+      model: *users
+    show: *user_default
+    destroy: *user_default
+    new: *user_default_create
+    create: *user_default_create
+    edit: *user_default_update
+    update: *user_default_update
   groups:
     default: &group_default
-      title: "%{model}"
+      title: "%{model}: %{instance}"
       model: *group
-      back: *groups
+      confirm: Are you sure?
     default_create: &group_default_create
       <<: *group_default
       title: "New %{model}"
       submit: "Create %{model}"
     default_update: &group_default_update
       <<: *group_default
-      title: "Edit %{model}"
+      title: "Editing %{model}: %{instance}"
       submit: "Update %{model}"
     index:
       <<: *group_default
+      title: "%{model}"
       model: *groups
-      back: *topics
     show: *group_default
     destroy: *group_default
     new: *group_default_create
@@ -301,19 +262,20 @@ en:
     update: *group_default_update
   topics:
     default: &topic_default
-      title: "%{model}"
+      title: "%{model}: %{instance}"
       model: *topic
-      back: *topics
+      confirm: Are you sure?
     default_create: &topic_default_create
       <<: *topic_default
       title: "New %{model}"
       submit: "Create %{model}"
     default_update: &topic_default_update
       <<: *topic_default
-      title: "Edit %{model}"
+      title: "Editing %{model}: %{instance}"
       submit: "Update %{model}"
     index:
       <<: *topic_default
+      title: "%{model}"
       model: *topics
     show: *topic_default
     destroy: *topic_default
@@ -321,23 +283,46 @@ en:
     create: *topic_default_create
     edit: *topic_default_update
     update: *topic_default_update
+  pages:
+    default: &page_default
+      title: "%{model}: %{instance}"
+      model: *page
+      confirm: Are you sure?
+    default_create: &page_default_create
+      <<: *page_default
+      title: "New %{model}"
+      submit: "Create %{model}"
+    default_update: &page_default_update
+      <<: *page_default
+      title: "Editing %{model}: %{instance}"
+      submit: "Update %{model}"
+    index:
+      <<: *page_default
+      title: "%{model}"
+      model: *pages
+    show: *page_default
+    destroy: *page_default
+    new: *page_default_create
+    create: *page_default_create
+    edit: *page_default_update
+    update: *page_default_update
   things:
     default: &thing_default
-      title: "%{model}"
+      title: "%{model}: %{instance}"
       model: *thing
-      back: *things
+      confirm: Are you sure?
     default_create: &thing_default_create
       <<: *thing_default
       title: "New %{model}"
       submit: "Create %{model}"
     default_update: &thing_default_update
       <<: *thing_default
-      title: "Edit %{model}"
+      title: "Editing %{model}: %{instance}"
       submit: "Update %{model}"
     index:
       <<: *thing_default
+      title: "%{model}"
       model: *things
-      back: *topics
     show: *thing_default
     destroy: *thing_default
     new: *thing_default_create
@@ -346,24 +331,24 @@ en:
     update: *thing_default_update
   kinds:
     default: &kind_default
-      title: "%{model}"
+      title: "%{model}: %{instance}"
       model: *kind
+      confirm: Are you sure?
     default_create: &kind_default_create
       <<: *kind_default
       title: "New %{model}"
       submit: "Create %{model}"
     default_update: &kind_default_update
       <<: *kind_default
-      title: "Edit %{model}"
+      title: "Editing %{model}: %{instance}"
       submit: "Update %{model}"
     index:
       <<: *kind_default
+      title: "%{model}"
       model: *kinds
-      back: *things
     show: *kind_default
     destroy: *kind_default
     new: *kind_default_create
     create: *kind_default_create
     edit: *kind_default_update
     update: *kind_default_update
-

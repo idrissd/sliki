@@ -1,12 +1,10 @@
 <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @group.name) %></h1>
-<dl class="dl-horizontal">
-  <dt><%= Group.human_attribute_name(:name) %></dt>
-  <dd><%= @group.name %></dd>
-	<% @group.users.each do |user| %>
-	<dt><%= Group.human_attribute_name(:user) %></dt>
-	<dd><%= user.name %></dd>
-	<% end %>
-</dl>
+
+<button type="button" id='clip_button' data-clipboard-text="<%= group_url(@group) %>" title='Copy link to clipboard.' class="btn btn-default" aria-label="Copy link to clipboard.">
+  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+</button>
+<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-time"), version_path(@group.versions.last), :class => 'btn btn-default' %>
+<%= render :partial => "show", :locals => { :item => @group } %>
 <div class="form-actions">
 		<%= link_to dt('actions.edit', :model => Group.model_name.human), edit_group_path(@group), :class => 'btn btn-primary' %>
 		<%= link_to dt("actions.destroy", :model => Group.model_name.human), group_path(@group), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
