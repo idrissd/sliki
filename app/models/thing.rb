@@ -1,5 +1,4 @@
 class Thing < AbstractPage
-  belongs_to :topic
   # has_many :kinds, :order => :name, :dependent => :destroy
   # has_many :properties, :order => :position, :dependent => :destroy
   # has_many :summaries, :order => :position, :dependent => :destroy

@@ -1,35 +1,10 @@
-<h1>Listing things</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Topic</th>
-      <th>Name</th>
-      <th>Color</th>
-      <th>Position</th>
-      <th>X</th>
-      <th>Y</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @things.each do |thing| %>
-      <tr>
-        <td><%= thing.topic %></td>
-        <td><%= thing.name %></td>
-        <td><%= thing.color %></td>
-        <td><%= thing.position %></td>
-        <td><%= thing.x %></td>
-        <td><%= thing.y %></td>
-        <td><%= link_to 'Show', thing %></td>
-        <td><%= link_to 'Edit', edit_thing_path(thing) %></td>
-        <td><%= link_to 'Destroy', thing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Thing', new_thing_path %>
+<div class="pull-right">
+	<button type="button" id='clip_button' data-clipboard-text="<%= things_url %>" title='Copy link to clipboard.' class="btn btn-default" aria-label="Copy link to clipboard.">
+	  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+	</button>
+</div>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model")) %></h1>
+<%= render :partial => "things", :locals => { :things => @things } %>
+<div class="form-actions">
+	<%= link_to dt('actions.new', :model => Thing.model_name.human), new_thing_path, :class => 'btn btn-success' %>
+</div>

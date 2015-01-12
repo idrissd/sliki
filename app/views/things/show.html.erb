@@ -1,34 +1,12 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Topic:</strong>
-  <%= @thing.topic %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @thing.name %>
-</p>
-
-<p>
-  <strong>Color:</strong>
-  <%= @thing.color %>
-</p>
-
-<p>
-  <strong>Position:</strong>
-  <%= @thing.position %>
-</p>
-
-<p>
-  <strong>X:</strong>
-  <%= @thing.x %>
-</p>
-
-<p>
-  <strong>Y:</strong>
-  <%= @thing.y %>
-</p>
-
-<%= link_to 'Edit', edit_thing_path(@thing) %> |
-<%= link_to 'Back', things_path %>
+<div class="pull-right">
+	<button type="button" id='clip_button' data-clipboard-text="<%= thing_url(@thing) %>" title='Copy link to clipboard.' class="btn btn-default" aria-label="Copy link to clipboard.">
+	  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+	</button>
+	<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-time"), version_path(@thing.versions.last), :class => 'btn btn-default' %>
+</div>
+<h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @thing.name) %></h1>
+<%= render :partial => "show", :locals => { :item => @thing } %>
+<div class="form-actions">
+		<%= link_to dt('actions.edit', :model => Thing.model_name.human), edit_thing_path(@thing), :class => 'btn btn-primary' %>
+		<%= link_to dt("actions.destroy", :model => Thing.model_name.human), thing_path(@thing), :class => 'btn btn-danger', :method => :delete, :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
+</div>
