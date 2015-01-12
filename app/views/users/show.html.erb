@@ -1,7 +1,7 @@
+<div class="pull-right">
+	<button type="button" id='clip_button' data-clipboard-text="<%= user_url(@user) %>" title='Copy link to clipboard.' class="btn btn-default" aria-label="Copy link to clipboard.">
+	  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+	</button>
+</div>
 <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model"), :instance => @user.name) %></h1>
-<dl class="dl-horizontal">
-  <dt><%= User.human_attribute_name(:name) %></dt>
-  <dd><%= @user.name %></dd>
-  <dt><%= User.human_attribute_name(:email) %></dt>
-  <dd><%= mail_to @user.email %> %></dd>
-</dl>
+<%= render :partial => "show", :locals => { :item => @user } %>

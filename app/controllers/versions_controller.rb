@@ -7,7 +7,7 @@ class VersionsController < ApplicationController
 
   # GET /versions/id
   def show
-    @item = AbstractPage.find(@version.item_id)
+    @item = @version.item
     @versions = @item.versions.reverse
   end
 
