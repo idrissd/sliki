@@ -160,9 +160,9 @@ en:
     update: Updated
     destroy: Destroyed
   notices:
-    create: "%{model} was successfully created."
-    update: "%{model} was successfully updated."
-    destroy: "%{model} was successfully deleted."
+    create: "%{model} was successfully created. %{link}"
+    update: "%{model} was successfully updated. %{link}"
+    destroy: "%{model} was successfully destroyed. %{link}"
     undo: Undo
     undid:  Undid
     redo: Redo

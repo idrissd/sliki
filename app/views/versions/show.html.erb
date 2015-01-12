@@ -1,5 +1,6 @@
+<h1><%= @item.class %>: <%= @item.name %></h1>
 <p>
-	<%= dt("notices.revision", :event => dt("events.#{@item.versions.last.event}"), :duration => time_ago_in_words(@item.versions.last.created_at), :whom => User.find(@item.versions.last.whodunnit).name )%>
+	<%= dt("notices.revision", :event => dt("events.#{@item.versions.last.event}"), :model => @item.class, :duration => time_ago_in_words(@item.versions.last.created_at), :whom => User.find(@item.versions.last.whodunnit).name )%>
 </p>
 <%= render :partial => "#{@item.versions.last.item.type.parameterize.pluralize}/show", :locals => { :item => @item } %>
 <% @versions.each do |version| %>

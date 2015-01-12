@@ -9,8 +9,8 @@
 		<% topics.each do |topic| %>
 		  <tr>
 		    <td>
-					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-trash"), topic_path(topic), :method => :delete, :class => "btn btn-mini btn-danger", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
-					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-edit"), edit_topic_path(topic), :class => 'btn btn-small btn-primary' %>
+					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-trash"), topic_path(topic), :method => :delete, :class => "btn btn-mini btn-danger btn-xs", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
+					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-edit"), edit_topic_path(topic), :class => 'btn btn-small btn-primary btn-xs' %>
 					<%= link_to topic.name, topic_path(topic) %>
 				</td>
 				<td><%= link_to topic.author.name, user_path(topic.author) %></td>

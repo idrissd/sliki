@@ -4,7 +4,7 @@ class TopicsController < ApplicationController
   respond_to :html, :json
 
   def index
-    @topics = Topic.all
+    @topics = Topic.where("name != ?", '*')
     respond_with(@topics)
   end
 

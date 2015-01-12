@@ -1,3 +1,8 @@
+<div class="pull-right">
+	<button type="button" id='clip_button' data-clipboard-text="<%= topics_url %>" title='Copy link to clipboard.' class="btn btn-default" aria-label="Copy link to clipboard.">
+	  <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+	</button>
+</div>
 <h1><%= dt("#{controller_name}.#{action_name}.title", :model => dt("#{controller_name}.#{action_name}.model")) %></h1>
 <%= render :partial => "topics", :locals => { :topics => @topics } %>
 <div class="form-actions">
