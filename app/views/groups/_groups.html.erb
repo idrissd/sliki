@@ -10,8 +10,8 @@
 		<% groups.each do |group| %>
 		  <tr>
 		    <td>
-					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-trash"), group_path(group), :method => :delete, :class => "btn btn-mini btn-danger", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
-					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-edit"), edit_group_path(group), :class => 'btn btn-small btn-primary' %>
+					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-trash"), group_path(group), :method => :delete, :class => "btn btn-mini btn-danger btn-xs", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
+					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-edit"), edit_group_path(group), :class => 'btn btn-small btn-primary btn-xs' %>
 					<%= link_to group.name, group_path(group) %>
 				</td>
 				<td><%= link_to group.author.name, user_path(group.author) %></td>

@@ -175,7 +175,7 @@ en:
     done: Done
     destroy: "Delete %{model}"
     edit: "Edit %{model}"
-    back: "< %{model}"
+    back: "Back"
     new: "New %{model}"
     checkout: Checkout
     add: "Add %{model}"

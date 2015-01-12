@@ -1,6 +1,8 @@
 <dl class="dl-horizontal">
   <dt><%= Group.human_attribute_name(:name) %></dt>
   <dd><%= item.name %></dd>
+  <dt><%= Group.human_attribute_name(:author) %></dt>
+  <dd><%= item.author.name %></dd>
 	<% item.users.each do |user| %>
 	<dt><%= Group.human_attribute_name(:user) %></dt>
 	<dd><%= user.name %></dd>
