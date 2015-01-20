@@ -1,0 +1,4 @@
+PassengerEnabled On
+PassengerLoadShellEnvVars On
+PassengerAppRoot /home/idrissa/sliki_rails4
+RackEnv production
