@@ -33,13 +33,21 @@ padding-top: 0;
 .content { padding-top: 50px; }
 
 #footer {
+
+
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: auto;
   height: 60px;
   border-top: white 1px solid;
 
   p {
     padding-top: 10px;
   }
+}
+
+.footer{
+  background-color: #D8D8D8;
+  color: black;
+  
 }

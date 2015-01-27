@@ -3,13 +3,12 @@
 
 
   <div class="form-inputs">
-
-  <%= f.association :topic, :collection => Topic.all, :input_html => {:class => "select2"} %>
-  
-    <%= f.input :name %>
+  <%= f.association :topic, :collection => Topic.all, prompt: "Choose a Topic" , :input_html => {:class => "select2"} %>
+  <%= f.input :name %>
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= link_to dt('actions.cancel'), pages_path, :class => 'btn btn-default' %>
+	<%= f.button :submit, :class => 'btn btn-primary', :value => dt("#{controller_name}.#{action_name}.submit", :model => dt("#{controller_name}.#{action_name}.model")) %>
   </div>
 <% end %>
