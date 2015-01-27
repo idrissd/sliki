@@ -1,8 +1,11 @@
 <%= simple_form_for(@page) do |f| %>
   <%= f.error_notification %>
 
+
   <div class="form-inputs">
-    <%= f.association :topic %>
+
+  <%= f.association :topic, :collection => Topic.all, :input_html => {:class => "select2"} %>
+  
     <%= f.input :name %>
   </div>
 

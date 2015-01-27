@@ -12,8 +12,8 @@
 					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-trash"), thing_path(thing), :method => :delete, :class => "btn btn-mini btn-danger btn-xs", :data => { :confirm => dt("#{controller_name}.#{action_name}.confirm") } %>
 					<%= link_to content_tag(:span, "", :class => "glyphicon glyphicon-edit"), edit_thing_path(thing), :class => 'btn btn-small btn-primary btn-xs' %>
 					<%= link_to thing.name, thing_path(thing) %>
-				</td>
-				<td><%= link_to thing.author.name, user_path(thing.author) %></td>
+			</td>
+			<td><%= link_to thing.author.name, user_path(thing.author) %></td>
 		  </tr>
 		<% end %>
   </tbody>
