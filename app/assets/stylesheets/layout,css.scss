@@ -6,19 +6,43 @@ html {
 body { 
 margin-bottom: 60px;
 padding-top: 0;
+width:auto;
+.body{
+  widht: 100%;
+  background-color: #F0F0EF;
+}
+
+.full{
+  width:100%;
+  background-color:#2A2A2A; 
+  height:52px;
+}
+.full1{
+  background-color:#2A2A2A; 
+  height:52px;
+}
+
+.full3{
+  background-color:#AEB1D4;
+  margin:2px;
+}
+.full4{
+  width:100%
+}
     
  }
 
+
 .page-header {
-  
+  margin: 2px;
   height: 271px;
-  padding-bottom: 10px;
-  background: image-url('bbri1.jpg');
+  /*background: image-url('bbri1.jpg');*/
 }
+
 
 #header {
   height: 150px;
-    width: 75%;
+    width: 100%;
   background-color: #00AEEF;
   padding-top: 0;
 
@@ -32,24 +56,23 @@ padding-top: 0;
 
 .content { padding-top: 50px; }
 
-#footer {
-
-
-  position: absolute;
-  bottom: 0;
-  width: auto;
-  height: 60px;
-  border-top: white 1px solid;
-
-  p {
-    padding-top: 10px;
-  }
-}
-
 .footer{
   background-color: #D8D8D8;
   color: black;
+  padding-bottom: 10px;
+  margin: 2px;
 }
-.center{
+
+#main .body{
+  background-color: #D8D8D8;
+}
+
+
+.copyright{
+  background-color: #999999;
   position: center;
+  padding: 10px;
+  padding-bottom: 1px;
+  hight: 2px;
+  color: Black;
 }
